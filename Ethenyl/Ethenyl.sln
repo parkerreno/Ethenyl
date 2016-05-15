@@ -3,58 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftServe", "SoftServe\SoftServe.csproj", "{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaferCone", "WaferCone\WaferCone.csproj", "{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
+		Ad-Hoc|ARM = Ad-Hoc|ARM
+		Ad-Hoc|iPhone = Ad-Hoc|iPhone
+		Ad-Hoc|iPhoneSimulator = Ad-Hoc|iPhoneSimulator
+		Ad-Hoc|x64 = Ad-Hoc|x64
+		Ad-Hoc|x86 = Ad-Hoc|x86
+		AppStore|Any CPU = AppStore|Any CPU
+		AppStore|ARM = AppStore|ARM
+		AppStore|iPhone = AppStore|iPhone
+		AppStore|iPhoneSimulator = AppStore|iPhoneSimulator
+		AppStore|x64 = AppStore|x64
+		AppStore|x86 = AppStore|x86
 		Debug|Any CPU = Debug|Any CPU
 		Debug|ARM = Debug|ARM
+		Debug|iPhone = Debug|iPhone
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|ARM = Release|ARM
+		Release|iPhone = Release|iPhone
+		Release|iPhoneSimulator = Release|iPhoneSimulator
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|ARM.Build.0 = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|x64.Build.0 = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Debug|x86.Build.0 = Debug|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|ARM.ActiveCfg = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|ARM.Build.0 = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|x64.ActiveCfg = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|x64.Build.0 = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|x86.ActiveCfg = Release|Any CPU
-		{69EFC6E6-5406-4AAB-83EF-6D9C3D802DBB}.Release|x86.Build.0 = Release|Any CPU
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|ARM.ActiveCfg = Debug|ARM
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|ARM.Build.0 = Debug|ARM
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|ARM.Deploy.0 = Debug|ARM
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|x64.ActiveCfg = Debug|x64
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|x64.Build.0 = Debug|x64
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|x64.Deploy.0 = Debug|x64
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|x86.ActiveCfg = Debug|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|x86.Build.0 = Debug|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Debug|x86.Deploy.0 = Debug|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|Any CPU.ActiveCfg = Release|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|ARM.ActiveCfg = Release|ARM
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|ARM.Build.0 = Release|ARM
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|ARM.Deploy.0 = Release|ARM
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|x64.ActiveCfg = Release|x64
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|x64.Build.0 = Release|x64
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|x64.Deploy.0 = Release|x64
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|x86.ActiveCfg = Release|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|x86.Build.0 = Release|x86
-		{5C7B7B04-29FB-46E1-ABC7-E6EF256FB667}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
