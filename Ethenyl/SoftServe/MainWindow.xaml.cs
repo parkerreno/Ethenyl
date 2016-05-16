@@ -199,20 +199,20 @@ namespace SoftServe
         {
             var status = _localApi.GetStatus();
             PlayButton = status.Playing ? "" : "";
-            if (!status.Track.IsAd())
+            if (status.Track == null || status.Track.IsAd())
+            {
+                ProgressInd = true;
+                CurrentSong = "Advertisement";
+                CurrentArtist = "If only the current user paid for premium...  Oh well.";
+                //CurrentAlbumArt = new Uri("NoArt.png");
+            }
+            else
             {
                 CurrentArtist = status.Track.ArtistResource.Name;
                 CurrentSong = status.Track.TrackResource.Name;
                 CurrentAlbumArt = new Uri(status.Track.GetAlbumArtUrl(AlbumArtSize.Size640));
 
                 TrackMax = status.Track.Length;
-            }
-            else
-            {
-                ProgressInd = true;
-                CurrentSong = "Advertisement";
-                CurrentArtist = "If only the current user paid for premium...  Oh well.";
-                //CurrentAlbumArt = new Uri("NoArt.png");
             }
         }
 

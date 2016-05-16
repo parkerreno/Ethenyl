@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SoftServe"
         mc:Ignorable="d"
         Title="Soft Serve" Height="720" Width="1280">
-    <Grid>
+    <Grid Background="#FF3A3A3A">
         <Image Panel.ZIndex="-99" Source="{Binding CurrentAlbumArt}" Effect="{Binding BlurEffect}" Opacity="0.73" Width="{Binding MaxEdge}" Height="{Binding MaxEdge}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Grid>
             <Grid.RowDefinitions>
@@ -26,11 +26,11 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
-                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Back_Click"/>
-                    <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick"/>
-                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Forward_Click"/>
+                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Back_Click" BorderThickness="0"/>
+                    <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick" BorderThickness="0"/>
+                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Forward_Click" BorderThickness="0"/>
                 </StackPanel>
-                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFD1D1D1" Opacity="0.44" />
+                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
             </Grid>
             <ListView Grid.Row="2" Background="{x:Null}" BorderThickness="0">
                 <ListView.ItemTemplate>
