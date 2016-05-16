@@ -1,19 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
@@ -153,7 +142,7 @@ namespace SoftServe
             }
         }
 
-        private SpotifyLocalAPI LocalAPI;
+        private SpotifyLocalAPI _localApi;
 
         protected override void OnActivated(EventArgs e)
         {
@@ -162,19 +151,19 @@ namespace SoftServe
                 SpotifyLocalAPI.RunSpotify();
             if (!SpotifyLocalAPI.IsSpotifyWebHelperRunning())
                 SpotifyLocalAPI.RunSpotifyWebHelper();
-            LocalAPI = new SpotifyLocalAPI();
-            LocalAPI.Connect();
-            LocalAPI.ListenForEvents = true;
-            LocalAPI.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
-            LocalAPI.OnTrackChange += LocalAPI_OnTrackChange;
-            LocalAPI.OnPlayStateChange += LocalAPI_OnPlayStateChange;
+            _localApi = new SpotifyLocalAPI();
+            _localApi.Connect();
+            _localApi.ListenForEvents = true;
+            _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
+            _localApi.OnTrackChange += LocalAPI_OnTrackChange;
+            _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
 
             SyncStartingData();
         }
 
         private void SyncStartingData()
         {
-            var status = LocalAPI.GetStatus();
+            var status = _localApi.GetStatus();
             PlayButton = status.Playing ? "" : "";
             if (!status.Track.IsAd())
             {
@@ -237,23 +226,23 @@ namespace SoftServe
 
         private void Forward_Click(object sender, RoutedEventArgs e)
         {
-            LocalAPI.Skip();
+            _localApi.Skip();
         }
 
         private void Back_Click(object sender, RoutedEventArgs e)
         {
-            LocalAPI.Previous();
+            _localApi.Previous();
         }
 
         private void PlayPauseClick(object sender, RoutedEventArgs e)
         {
-            if (LocalAPI.GetStatus().Playing)
+            if (_localApi.GetStatus().Playing)
             {
-                LocalAPI.Pause();
+                _localApi.Pause();
             }
             else
             {
-                LocalAPI.Play();
+                _localApi.Play();
             }
         }
 
