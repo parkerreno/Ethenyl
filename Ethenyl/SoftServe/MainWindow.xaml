@@ -6,41 +6,46 @@
         xmlns:local="clr-namespace:SoftServe"
         mc:Ignorable="d"
         Title="Soft Serve" Height="720" Width="1280">
-    <Grid >
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="2*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal">
-            <Image Source="{Binding CurrentAlbumArt}"></Image>
-            <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                <TextBlock Text="{Binding CurrentSong, FallbackValue='Failed to bind trackname'}" FontFamily="Segoe UI Semibold" FontSize="48"></TextBlock>
-                <TextBlock Text="{Binding CurrentArtist, FallbackValue='Failed to bind artistname'}" FontSize="26"></TextBlock>
+    <Grid>
+        <Image Panel.ZIndex="-99" Source="{Binding CurrentAlbumArt}" Effect="{Binding BlurEffect}" Opacity="0.73" Width="{Binding MaxEdge}" Height="{Binding MaxEdge}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="2*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal">
+                <Image Source="{Binding CurrentAlbumArt}" Margin="12"></Image>
+                <StackPanel Orientation="Vertical" VerticalAlignment="Center">
+                    <TextBlock Text="{Binding CurrentSong, FallbackValue='Failed to bind trackname'}" FontFamily="Segoe UI Semibold" FontSize="48"></TextBlock>
+                    <TextBlock Text="{Binding CurrentArtist, FallbackValue='Failed to bind artistname'}" FontSize="26"></TextBlock>
+                </StackPanel>
             </StackPanel>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Vertical">
-            
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Back_Click"/>
-                <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick"/>
-                <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Forward_Click"/>
-            </StackPanel>
-        <ProgressBar IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" LargeChange="1" SmallChange="0.1"/>
-        </StackPanel>
-        <ListView Grid.Row="2">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"></ColumnDefinition>
-                            <ColumnDefinition Width="Auto"></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{Binding QueueText}">ERROR BINDING</TextBlock>
-                        <Button Click="QueueDelete_Clicked"></Button>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
+            <Grid Grid.Row="1" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
+                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Back_Click"/>
+                    <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick"/>
+                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Forward_Click"/>
+                </StackPanel>
+                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FF0074FF" Opacity="0.5" />
+            </Grid>
+            <ListView Grid.Row="2" Background="{x:Null}" BorderThickness="0">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding QueueText}">ERROR BINDING</TextBlock>
+                            <Button Click="QueueDelete_Clicked"></Button>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
     </Grid>
 </Window>

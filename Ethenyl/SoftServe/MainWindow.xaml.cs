@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Media.Effects;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
@@ -21,6 +22,8 @@ namespace SoftServe
             InitializeComponent();
             DataContext = this;
         }
+
+        public BlurEffect BlurEffect { get; set; } = new BlurEffect() {Radius = 57, RenderingBias = RenderingBias.Quality};
 
         private string _playButton;
 
@@ -142,6 +145,21 @@ namespace SoftServe
             }
         }
 
+        private double _maxEdge;
+
+        public double MaxEdge
+        {
+            get { return _maxEdge; }
+            set
+            {
+                if (value != _maxEdge)
+                {
+                    _maxEdge = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private SpotifyLocalAPI _localApi;
 
         protected override void OnActivated(EventArgs e)
@@ -154,11 +172,27 @@ namespace SoftServe
             _localApi = new SpotifyLocalAPI();
             _localApi.Connect();
             _localApi.ListenForEvents = true;
+
             _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
             _localApi.OnTrackChange += LocalAPI_OnTrackChange;
             _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
+            SizeChanged += MainWindow_SizeChanged;
+
+            MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
 
             SyncStartingData();
+        }
+
+        private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Height > e.NewSize.Width)
+            {
+                MaxEdge = e.NewSize.Height*1.05;
+            }
+            else
+            {
+                MaxEdge = e.NewSize.Width*1.05;
+            }
         }
 
         private void SyncStartingData()
