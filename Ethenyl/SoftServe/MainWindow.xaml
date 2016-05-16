@@ -26,9 +26,9 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
-                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Back_Click" BorderThickness="0" Background="{x:Null}"/>
-                    <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick" BorderThickness="0" Background="{x:Null}" Foreground="Black"/>
-                    <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Forward_Click" BorderThickness="0" Background="{x:Null}"/>
+                    <Button Content="" FontFamily="Segoe MDL2 Assets, Segoe UI Symbol" FontSize="72" Margin="6" Padding="6" Click="Back_Click" BorderThickness="0" Background="{x:Null}"/>
+                    <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets, Segoe UI Symbol" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick" BorderThickness="0" Background="{x:Null}" Foreground="Black"/>
+                    <Button Content="" FontFamily="Segoe MDL2 Assets, Segoe UI Symbol" FontSize="72" Margin="6" Padding="6" Click="Forward_Click" BorderThickness="0" Background="{x:Null}"/>
                 </StackPanel>
                 <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
             </Grid>

@@ -198,7 +198,7 @@ namespace SoftServe
         private void SyncStartingData()
         {
             var status = _localApi.GetStatus();
-            PlayButton = status.Playing ? "" : "";
+            PlayButton = status.Playing ? "" : ""; // Pause button, play button
             if (status.Track == null || status.Track.IsAd())
             {
                 ProgressInd = true;
@@ -220,11 +220,11 @@ namespace SoftServe
         {
             if (e.Playing)
             {
-                PlayButton = "";
+                PlayButton = ""; //pause button
             }
             else
             {
-                PlayButton = "";
+                PlayButton = ""; //play button
             }
         }
 
