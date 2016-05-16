@@ -201,7 +201,7 @@ namespace SoftServe
             {
                 MessageBox.Show(
                     "It appears Spotify failed to launch in time or is not installed.  Please restart Ethenyl to try again.", "Error Starting Ethenyl");
-                App.Current.Shutdown();
+                Application.Current.Shutdown();
             }
             var status = _localApi.GetStatus();
             PlayButton = status.Playing ? "" : ""; // Pause button, play button
