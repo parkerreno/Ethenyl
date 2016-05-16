@@ -30,18 +30,13 @@
                     <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick"/>
                     <Button Content="" FontFamily="Segoe MDL2 Assets" FontSize="72" Margin="6" Padding="6" Click="Forward_Click"/>
                 </StackPanel>
-                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FF0074FF" Opacity="0.5" />
+                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFD1D1D1" Opacity="0.44" />
             </Grid>
             <ListView Grid.Row="2" Background="{x:Null}" BorderThickness="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding QueueText}">ERROR BINDING</TextBlock>
-                            <Button Click="QueueDelete_Clicked"></Button>
+                            
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>
