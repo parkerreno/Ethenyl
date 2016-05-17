@@ -29,14 +29,23 @@
                     <Button Content="" FontFamily="Segoe MDL2 Assets, Segoe UI Symbol" FontSize="72" Margin="6" Padding="6" Click="Back_Click" BorderThickness="0" Background="{x:Null}"/>
                     <Button Content="{Binding PlayButton, FallbackValue=''}" FontFamily="Segoe MDL2 Assets, Segoe UI Symbol" FontSize="72" Margin="6" Padding="6" Click="PlayPauseClick" BorderThickness="0" Background="{x:Null}" Foreground="Black"/>
                     <Button Content="" FontFamily="Segoe MDL2 Assets, Segoe UI Symbol" FontSize="72" Margin="6" Padding="6" Click="Forward_Click" BorderThickness="0" Background="{x:Null}"/>
+                    <Button Content="Queue SS" Click="LOL2_Click"></Button>
                 </StackPanel>
                 <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
             </Grid>
-            <ListView Grid.Row="2" Background="{x:Null}" BorderThickness="0">
+            <ListView x:Name="QueueList" Grid.Row="2" ItemsSource="{Binding SongQueue}" Background="{x:Null}" BorderThickness="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>
-                            
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="Auto"></ColumnDefinition>
+
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{Binding TrackName}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Grid.Column="1" Text="{Binding TrackArtist}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+                            <TextBlock Grid.Column="2" Text="{Binding QueuedBy}" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
                         </Grid>
                     </DataTemplate>
                 </ListView.ItemTemplate>

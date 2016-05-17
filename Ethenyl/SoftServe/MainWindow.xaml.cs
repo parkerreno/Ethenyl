@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Media.Converters;
 using System.Windows.Media.Effects;
+using System.Windows.Threading;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
@@ -19,11 +22,14 @@ namespace SoftServe
     {
         public MainWindow()
         {
+            _songQueue = new ObservableCollection<QueuedSong>();
             InitializeComponent();
             DataContext = this;
+            QueueList.ItemsSource = SongQueue;
         }
 
-        public BlurEffect BlurEffect { get; set; } = new BlurEffect() {Radius = 57, RenderingBias = RenderingBias.Quality};
+#region Properties
+        public BlurEffect BlurEffect { get; set; } = new BlurEffect() { Radius = 57, RenderingBias = RenderingBias.Quality };
 
         private string _playButton;
 
@@ -160,6 +166,18 @@ namespace SoftServe
             }
         }
 
+        private ObservableCollection<QueuedSong> _songQueue;
+
+        public ObservableCollection<QueuedSong> SongQueue
+        {
+            get
+            {
+                return _songQueue;
+            }
+        }//Yeah we're using an observable collection instead of a queue so we can display the list of upcoming songs. 
+
+#endregion
+
         private SpotifyLocalAPI _localApi;
 
         protected override void OnActivated(EventArgs e)
@@ -187,11 +205,11 @@ namespace SoftServe
         {
             if (e.NewSize.Height > e.NewSize.Width)
             {
-                MaxEdge = e.NewSize.Height*1.05;
+                MaxEdge = e.NewSize.Height * 1.05;
             }
             else
             {
-                MaxEdge = e.NewSize.Width*1.05;
+                MaxEdge = e.NewSize.Width * 1.05;
             }
         }
 
@@ -222,15 +240,24 @@ namespace SoftServe
             }
         }
 
+        private bool _lastState = false;
         private void LocalAPI_OnPlayStateChange(object sender, PlayStateEventArgs e)
         {
-            if (e.Playing)
+            if (e.Playing == _lastState)
+                return;
+            _lastState = e.Playing;
+            PlayButton = e.Playing ? "" : "";
+
+            var status = _localApi.GetStatus();
+
+            if (!e.Playing && !status.Track.IsAd() && SongQueue.Count > 0)
             {
-                PlayButton = ""; //pause button
-            }
-            else
-            {
-                PlayButton = ""; //play button
+                var toPlay = SongQueue[0];
+                _localApi.PlayURL(toPlay.SpotifyUri);
+                if (SongQueue.Contains(toPlay))
+                {
+                    SongQueue.Remove(toPlay);
+                }
             }
         }
 
@@ -259,11 +286,6 @@ namespace SoftServe
             }
         }
 
-        private void QueueDelete_Clicked(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("LOL");
-        }
-
         private void Forward_Click(object sender, RoutedEventArgs e)
         {
             _localApi.Skip();
@@ -285,25 +307,31 @@ namespace SoftServe
                 _localApi.Play();
             }
         }
-
-        private async void LOL_Click(object sender, RoutedEventArgs e)
+        private async void LOL2_Click(object sender, RoutedEventArgs e)
         {
             var spotify = new SpotifyWebAPI() { UseAuth = false };
 
             var tracks = await spotify.SearchItemsAsync("Say Something", SearchType.Track);
-            var uri = tracks.Tracks.Items.First().Uri;
-            var api = new SpotifyLocalAPI();
-            api.Connect();
+            var track = tracks.Tracks.Items.First();
 
-            api.PlayURL(uri);
+            var newQ = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, "Parker");
+            SongQueue.Add(newQ);
         }
 
+        private void CheckAndAdd(string SID)
+        {
+            var spotify = new SpotifyWebAPI() {UseAuth = false};
+            var track = spotify.GetTrack(SID);
+
+
+        }
+        #region INPC Boilerplate
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
+#endregion
     }
 }
