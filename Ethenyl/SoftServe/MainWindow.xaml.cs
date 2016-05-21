@@ -219,25 +219,47 @@ namespace SoftServe
                 }
             }
 
-            //TODO: Better handling/ more command support
-            switch (e.Dequeue().ToUpper())
+            string currentUser;
+            if (e.Peek().ToUpper() != "ACTIONBY" && e.Peek().ToUpper() != "REGISTERUSER")
             {
-                case "QUEUETRACK":
-                    if (e.Count >= 3)
-                    {
-                        string trackId = e.Dequeue();
-                        if (e.Dequeue().ToUpper().Equals("QUEUEDBY"))
-                        {
-                            string queuedBy = e.Dequeue();
-                            CheckAndAdd(trackId, queuedBy);
-                        }
-                    }
+                MessageBox.Show("A command was sent without authentication and was ignored.");
+                return;
+            }
+            else
+            {
+                e.Dequeue(); // dequeue the command
+                string[] userData = e.Dequeue().Split(':');
+                if (userData.Length != 2)
+                {
+                    return; // Malformed args (not just username:PIN)
+                }
+                currentUser = userData[0];
+                //TODO: check pin if existing user, register if new user
+            }
+
+            if (e.Count > 0 && e.Count % 2 == 0)
+            {
+                HandleCommands(e, currentUser);
+            }
+        }
+
+        private void HandleCommands(Queue<string> commands, string authUser)
+        {
+            switch (commands.Dequeue().ToUpper())
+            {
+                case "QUEUEID":
+                    string id = commands.Dequeue();
+                    CheckAndAdd(id, authUser);
                     break;
                 default:
                     MessageBox.Show("Unknown Command from Client");
                     break;
             }
 
+            if (commands.Count > 0 && commands.Count % 2 ==0)
+            {
+                HandleCommands(commands, authUser);
+            }
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -358,14 +380,17 @@ namespace SoftServe
             SongQueue.Add(newQ);
         }
 
-        private void CheckAndAdd(string SID, string loginCombo)
+        private void CheckAndAdd(string SID, string username)
         {
-            //TODO: Process login combo
             var spotify = new SpotifyWebAPI() { UseAuth = false };
             var track = spotify.GetTrack(SID);
 
-            var newSong = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, loginCombo);
-            SongQueue.Add(newSong);
+            var newSong = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, username);
+
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
+            {
+                SongQueue.Add(newSong);
+            });
         }
         #region INPC Boilerplate
         public event PropertyChangedEventHandler PropertyChanged;

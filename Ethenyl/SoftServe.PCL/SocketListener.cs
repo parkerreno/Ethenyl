@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -23,27 +24,35 @@ namespace SoftServe.PCL
             {
                 using (var reader = new StreamReader(recvStr))
                 {
-                    Queue<string> receivedStuff = new Queue<string>();
-
-                    bool go = true;
-
-                    do
+                    try
                     {
-                        var line = reader.ReadLine();
-                        if (line.ToUpper().Equals("ENDTRANSMISSION") || string.IsNullOrWhiteSpace(line))
+                        Queue<string> receivedStuff = new Queue<string>();
+
+                        bool go = true;
+
+                        do
                         {
-                            go = false;
-                            continue;
-                        }
-                        receivedStuff.Enqueue(line);
-                    } while (go);
+                            var line = reader.ReadLine();
+                            if (line.ToUpper().Equals("ENDTRANSMISSION") || string.IsNullOrWhiteSpace(line))
+                            {
+                                go = false;
+                                continue;
+                            }
+                            receivedStuff.Enqueue(line);
+                        } while (go);
 
-                    //while (reader != null && !reader.EndOfStream)
-                    //{
-                    //    receivedStuff.Enqueue(reader.ReadLine());
-                    //}
+                        //while (reader != null && !reader.EndOfStream)
+                        //{
+                        //    receivedStuff.Enqueue(reader.ReadLine());
+                        //}
 
-                    ConnectionReceived?.Invoke(sender, receivedStuff);
+                        ConnectionReceived?.Invoke(sender, receivedStuff);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.Message);
+                       
+                    }
                 }
             }
         }
