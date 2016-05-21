@@ -1,17 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Media.Converters;
 using System.Windows.Media.Effects;
 using System.Windows.Threading;
+using SoftServe.PCL;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Enums;
-
+using System.Threading;
 
 namespace SoftServe
 {
@@ -22,13 +25,33 @@ namespace SoftServe
     {
         public MainWindow()
         {
-            _songQueue = new ObservableCollection<QueuedSong>();
+            //_songQueue = new ObservableCollection<QueuedSong>();
             InitializeComponent();
             DataContext = this;
             QueueList.ItemsSource = SongQueue;
+
+            if (!SpotifyLocalAPI.IsSpotifyRunning())
+                SpotifyLocalAPI.RunSpotify();
+            if (!SpotifyLocalAPI.IsSpotifyWebHelperRunning())
+                SpotifyLocalAPI.RunSpotifyWebHelper();
+            _localApi = new SpotifyLocalAPI();
+            _localApi.Connect();
+            _localApi.ListenForEvents = true;
+
+            _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
+            _localApi.OnTrackChange += LocalAPI_OnTrackChange;
+            _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
+            SizeChanged += MainWindow_SizeChanged;
+
+            MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
+
+            SyncStartingData();
+
+            SocketListener sl = new SocketListener("5452");
+            sl.ConnectionReceived += Sl_ConnectionReceived;
         }
 
-#region Properties
+        #region Properties
         public BlurEffect BlurEffect { get; set; } = new BlurEffect() { Radius = 57, RenderingBias = RenderingBias.Quality };
 
         private string _playButton;
@@ -172,33 +195,49 @@ namespace SoftServe
         {
             get
             {
+                if (_songQueue == null)
+                {
+                    _songQueue = new ObservableCollection<QueuedSong>();
+                }
                 return _songQueue;
             }
         }//Yeah we're using an observable collection instead of a queue so we can display the list of upcoming songs. 
 
-#endregion
+        #endregion
 
         private SpotifyLocalAPI _localApi;
 
-        protected override void OnActivated(EventArgs e)
+        private void Sl_ConnectionReceived(object sender, Queue<string> e)
         {
-            base.OnActivated(e);
-            if (!SpotifyLocalAPI.IsSpotifyRunning())
-                SpotifyLocalAPI.RunSpotify();
-            if (!SpotifyLocalAPI.IsSpotifyWebHelperRunning())
-                SpotifyLocalAPI.RunSpotifyWebHelper();
-            _localApi = new SpotifyLocalAPI();
-            _localApi.Connect();
-            _localApi.ListenForEvents = true;
+            if (e.Count % 2 != 0)
+            {
+                var mbres = MessageBox.Show("A malformed instruction was received - try to parse? (This could crash SoftServe)",
+                "Client Messaging Error", MessageBoxButton.YesNo);
+                if (mbres == MessageBoxResult.No || mbres == MessageBoxResult.Cancel || mbres == MessageBoxResult.None)
+                {
+                    return;
+                }
+            }
 
-            _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
-            _localApi.OnTrackChange += LocalAPI_OnTrackChange;
-            _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
-            SizeChanged += MainWindow_SizeChanged;
+            //TODO: Better handling/ more command support
+            switch (e.Dequeue().ToUpper())
+            {
+                case "QUEUETRACK":
+                    if (e.Count >= 3)
+                    {
+                        string trackId = e.Dequeue();
+                        if (e.Dequeue().ToUpper().Equals("QUEUEDBY"))
+                        {
+                            string queuedBy = e.Dequeue();
+                            CheckAndAdd(trackId, queuedBy);
+                        }
+                    }
+                    break;
+                default:
+                    MessageBox.Show("Unknown Command from Client");
+                    break;
+            }
 
-            MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
-
-            SyncStartingData();
         }
 
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -240,12 +279,8 @@ namespace SoftServe
             }
         }
 
-        private bool _lastState = false;
         private void LocalAPI_OnPlayStateChange(object sender, PlayStateEventArgs e)
         {
-            if (e.Playing == _lastState)
-                return;
-            _lastState = e.Playing;
             PlayButton = e.Playing ? "" : "";
 
             var status = _localApi.GetStatus();
@@ -254,10 +289,15 @@ namespace SoftServe
             {
                 var toPlay = SongQueue[0];
                 _localApi.PlayURL(toPlay.SpotifyUri);
-                if (SongQueue.Contains(toPlay))
+
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action) delegate()
                 {
                     SongQueue.Remove(toPlay);
-                }
+                });
+
+                //var uiContext = SynchronizationContext.Current;
+                //uiContext.Send(y=>SongQueue.Remove(toPlay),null); //Allows us to edit the collection from this thread http://stackoverflow.com/posts/18331866/revisions
+
             }
         }
 
@@ -318,12 +358,14 @@ namespace SoftServe
             SongQueue.Add(newQ);
         }
 
-        private void CheckAndAdd(string SID)
+        private void CheckAndAdd(string SID, string loginCombo)
         {
-            var spotify = new SpotifyWebAPI() {UseAuth = false};
+            //TODO: Process login combo
+            var spotify = new SpotifyWebAPI() { UseAuth = false };
             var track = spotify.GetTrack(SID);
 
-
+            var newSong = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, loginCombo);
+            SongQueue.Add(newSong);
         }
         #region INPC Boilerplate
         public event PropertyChangedEventHandler PropertyChanged;
@@ -332,6 +374,6 @@ namespace SoftServe
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-#endregion
+        #endregion
     }
 }
