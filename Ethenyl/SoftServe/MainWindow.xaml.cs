@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -25,7 +26,6 @@ namespace SoftServe
     {
         public MainWindow()
         {
-            //_songQueue = new ObservableCollection<QueuedSong>();
             InitializeComponent();
             DataContext = this;
             QueueList.ItemsSource = SongQueue;
@@ -49,6 +49,8 @@ namespace SoftServe
 
             SocketListener sl = new SocketListener("5452");
             sl.ConnectionReceived += Sl_ConnectionReceived;
+
+            Dns.GetHostName();
         }
 
         #region Properties
