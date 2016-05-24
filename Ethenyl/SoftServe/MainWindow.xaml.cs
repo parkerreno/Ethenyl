@@ -253,6 +253,16 @@ namespace SoftServe
                     string id = commands.Dequeue();
                     CheckAndAdd(id, authUser);
                     break;
+                case "PAUSESONG":
+                    //TODO:Special authentication for play controls
+                    _localApi.Pause();
+                    commands.Dequeue(); //dequeue null arguments.
+                    break;
+                case "SKIPSONG":
+                    //TODO: Special auth
+                    _localApi.Skip();
+                    commands.Dequeue();//dequeue null arguments.
+                    break;
                 default:
                     MessageBox.Show("Unknown Command from Client");
                     break;
