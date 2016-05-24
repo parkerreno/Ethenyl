@@ -256,6 +256,7 @@ namespace SoftServe
                 case "PAUSESONG":
                     //TODO:Special authentication for play controls
                     _localApi.Pause();
+                    MessageBox.Show($"{authUser} paused the music.", "Music Paused");
                     commands.Dequeue(); //dequeue null arguments.
                     break;
                 case "SKIPSONG":
