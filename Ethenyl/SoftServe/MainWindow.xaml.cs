@@ -306,23 +306,6 @@ namespace SoftServe
         private void LocalAPI_OnPlayStateChange(object sender, PlayStateEventArgs e)
         {
             PlayButton = e.Playing ? "" : "";
-
-            var status = _localApi.GetStatus();
-
-            if (!e.Playing && !status.Track.IsAd() && SongQueue.Count > 0)
-            {
-                var toPlay = SongQueue[0];
-                _localApi.PlayURL(toPlay.SpotifyUri);
-
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action) delegate()
-                {
-                    SongQueue.Remove(toPlay);
-                });
-
-                //var uiContext = SynchronizationContext.Current;
-                //uiContext.Send(y=>SongQueue.Remove(toPlay),null); //Allows us to edit the collection from this thread http://stackoverflow.com/posts/18331866/revisions
-
-            }
         }
 
         private void LocalAPI_OnTrackTimeChange(object sender, TrackTimeChangeEventArgs e)
@@ -332,7 +315,19 @@ namespace SoftServe
 
         private void LocalAPI_OnTrackChange(object sender, TrackChangeEventArgs e)
         {
-            if (!e.NewTrack.IsAd())
+            var status = _localApi.GetStatus();
+
+            if (!e.NewTrack.IsAd() && !status.Playing  && SongQueue.Count > 0)
+            {
+                var toPlay = SongQueue[0];
+                _localApi.PlayURL(toPlay.SpotifyUri);
+
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
+                {
+                    SongQueue.Remove(toPlay);
+                });
+            }
+            else if (!e.NewTrack.IsAd())
             {
                 ProgressInd = false;
                 CurrentSong = e.NewTrack.TrackResource.Name;

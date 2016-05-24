@@ -75,10 +75,6 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="SpotifyAPI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\SpotifyAPI-NET.2.8.0\lib\SpotifyAPI.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -166,6 +162,10 @@
     <ProjectReference Include="..\SoftServe.PCL\SoftServe.PCL.csproj">
       <Project>{8eb73b94-2eb2-4fba-9cc1-1b4ea5ec4a7c}</Project>
       <Name>SoftServe.PCL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SpotifyAPI\SpotifyAPI.csproj">
+      <Project>{ebbe35e2-7b91-4d7d-b8fc-3a0472f5119d}</Project>
+      <Name>SpotifyAPI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
