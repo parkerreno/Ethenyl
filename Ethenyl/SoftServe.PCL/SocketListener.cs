@@ -8,15 +8,21 @@ using Windows.Networking.Sockets;
 
 namespace SoftServe.PCL
 {
+    /// <summary>
+    /// This is mainly a workaround for the screwy behavior of WPF, ClickOnce and WinRT APIS - expect it to change
+    /// </summary>
     public class SocketListener
     {
         private StreamSocketListener listener;
         public event EventHandler<Queue<string>> ConnectionReceived;
-        public SocketListener(string endpointName)
+        public SocketListener(string socket)
         {
-            SetupListener("5452");
+            SetupListener(socket);
         }
 
+        /// <summary>
+        /// New connection received
+        /// </summary>
         private async void Listener_ConnectionReceived(StreamSocketListener sender,
             StreamSocketListenerConnectionReceivedEventArgs args)
         {
@@ -32,7 +38,7 @@ namespace SoftServe.PCL
 
                         do
                         {
-                            var line = reader.ReadLine();
+                            var line = await reader.ReadLineAsync();
                             if (line.ToUpper().Equals("ENDTRANSMISSION") || string.IsNullOrWhiteSpace(line))
                             {
                                 go = false;
@@ -40,12 +46,6 @@ namespace SoftServe.PCL
                             }
                             receivedStuff.Enqueue(line);
                         } while (go);
-
-                        //while (reader != null && !reader.EndOfStream)
-                        //{
-                        //    receivedStuff.Enqueue(reader.ReadLine());
-                        //}
-
                         ConnectionReceived?.Invoke(sender, receivedStuff);
                     }
                     catch (Exception e)

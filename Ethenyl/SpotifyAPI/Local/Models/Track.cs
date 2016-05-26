@@ -95,21 +95,21 @@ namespace SpotifyAPI.Local.Models
         /// </summary>
         /// <param name="size">AlbumArtSize (160,320,640)</param>
         /// <returns>A Bitmap, which is the albumart</returns>
-        //public async Task<Bitmap> GetAlbumArtAsync(AlbumArtSize size)
-        //{
-        //    using (WebClient wc = new WebClient())
-        //    {
-        //        wc.Proxy = null;
-        //        string url = GetAlbumArtUrl(size);
-        //        if (url == "")
-        //            return null;
-        //        var data = await wc.DownloadDataTaskAsync(url);
-        //        using (MemoryStream ms = new MemoryStream(data))
-        //        {
-        //            return (Bitmap)Image.FromStream(ms);
-        //        }
-        //    }
-        //}
+        public async Task<Bitmap> GetAlbumArtAsync(AlbumArtSize size)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Proxy = null;
+                string url = GetAlbumArtUrl(size);
+                if (url == "")
+                    return null;
+                var data = await wc.DownloadDataTaskAsync(url);
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    return (Bitmap)Image.FromStream(ms);
+                }
+            }
+        }
 
         /// <summary>
         /// Returns a byte[] of the the album cover in the provided size asynchronous
@@ -133,21 +133,21 @@ namespace SpotifyAPI.Local.Models
         /// </summary>
         /// <param name="size">AlbumArtSize (160,320,640)</param>
         /// <returns>A Bitmap, which is the albumart</returns>
-        //public Bitmap GetAlbumArt(AlbumArtSize size)
-        //{
-        //    using (WebClient wc = new WebClient())
-        //    {
-        //        wc.Proxy = null;
-        //        string url = GetAlbumArtUrl(size);
-        //        if (string.IsNullOrEmpty(url))
-        //            return null;
-        //        var data = wc.DownloadData(url);
-        //        using (MemoryStream ms = new MemoryStream(data))
-        //        {
-        //            return (Bitmap)Image.FromStream(ms);
-        //        }
-        //    }
-        //}
+        public Bitmap GetAlbumArt(AlbumArtSize size)
+        {
+            using (WebClient wc = new WebClient())
+            {
+                wc.Proxy = null;
+                string url = GetAlbumArtUrl(size);
+                if (string.IsNullOrEmpty(url))
+                    return null;
+                var data = wc.DownloadData(url);
+                using (MemoryStream ms = new MemoryStream(data))
+                {
+                    return (Bitmap)Image.FromStream(ms);
+                }
+            }
+        }
 
         /// <summary>
         /// Returns a byte[] of the album cover in the provided size

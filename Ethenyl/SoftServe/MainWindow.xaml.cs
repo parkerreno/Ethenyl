@@ -24,36 +24,7 @@ namespace SoftServe
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            DataContext = this;
-            QueueList.ItemsSource = SongQueue;
-
-            if (!SpotifyLocalAPI.IsSpotifyRunning())
-                SpotifyLocalAPI.RunSpotify();
-            if (!SpotifyLocalAPI.IsSpotifyWebHelperRunning())
-                SpotifyLocalAPI.RunSpotifyWebHelper();
-            _localApi = new SpotifyLocalAPI();
-            _localApi.Connect();
-            _localApi.ListenForEvents = true;
-
-            _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
-            _localApi.OnTrackChange += LocalAPI_OnTrackChange;
-            _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
-            SizeChanged += MainWindow_SizeChanged;
-
-            MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
-
-            SyncStartingData();
-
-            SocketListener sl = new SocketListener("5452");
-            sl.ConnectionReceived += Sl_ConnectionReceived;
-
-            Dns.GetHostName();
-        }
-
-        #region Properties
+        #region Properties & Members
         public BlurEffect BlurEffect { get; set; } = new BlurEffect() { Radius = 57, RenderingBias = RenderingBias.Quality };
 
         private string _playButton;
@@ -205,10 +176,40 @@ namespace SoftServe
             }
         }//Yeah we're using an observable collection instead of a queue so we can display the list of upcoming songs. 
 
-        #endregion
-
         private SpotifyLocalAPI _localApi;
 
+        #endregion
+        public MainWindow()
+        {
+            InitializeComponent();
+            DataContext = this;
+            QueueList.ItemsSource = SongQueue;
+
+            if (!SpotifyLocalAPI.IsSpotifyRunning())
+                SpotifyLocalAPI.RunSpotify();
+            if (!SpotifyLocalAPI.IsSpotifyWebHelperRunning())
+                SpotifyLocalAPI.RunSpotifyWebHelper();
+            _localApi = new SpotifyLocalAPI();
+            _localApi.Connect();
+            _localApi.ListenForEvents = true;
+
+            _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
+            _localApi.OnTrackChange += LocalAPI_OnTrackChange;
+            _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
+            SizeChanged += MainWindow_SizeChanged;
+
+            MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
+
+            SyncStartingData();
+
+            SocketListener sl = new SocketListener("5452");
+            sl.ConnectionReceived += Sl_ConnectionReceived;
+        }
+        
+        /// <summary>
+        /// Handles connections from the socketlistener *this will be changed in the future*
+        /// </summary>
+        /// <param name="e">Queue of commands</param>
         private void Sl_ConnectionReceived(object sender, Queue<string> e)
         {
             if (e.Count % 2 != 0)
@@ -245,13 +246,18 @@ namespace SoftServe
             }
         }
 
+        /// <summary>
+        /// Command processor - can handle any number number of command pairs
+        /// </summary>
+        /// <param name="commands"></param>
+        /// <param name="authUser">Username of *authorized* user</param>
         private void HandleCommands(Queue<string> commands, string authUser)
         {
             switch (commands.Dequeue().ToUpper())
             {
                 case "QUEUEID":
                     string id = commands.Dequeue();
-                    CheckAndAdd(id, authUser);
+                    AddIdToQueue(id, authUser);
                     break;
                 case "PAUSESONG":
                     //TODO:Special authentication for play controls
@@ -275,11 +281,14 @@ namespace SoftServe
             }
         }
 
+        /// <summary>
+        /// Resizes the background album art when the window size changes
+        /// </summary>
         private void MainWindow_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (e.NewSize.Height > e.NewSize.Width)
             {
-                MaxEdge = e.NewSize.Height * 1.05;
+                MaxEdge = e.NewSize.Height * 1.05; // Make it a little bigger to avoid white borders
             }
             else
             {
@@ -287,6 +296,9 @@ namespace SoftServe
             }
         }
 
+        /// <summary>
+        /// Get the initial track data until we get a TrackChanged
+        /// </summary>
         private void SyncStartingData()
         {
             if (!SpotifyLocalAPI.IsSpotifyRunning() || !SpotifyLocalAPI.IsSpotifyWebHelperRunning())
@@ -314,21 +326,30 @@ namespace SoftServe
             }
         }
 
+        /// <summary>
+        /// Handles playstate changes (basically just changes the icon on the play/pause button)
+        /// </summary>
         private void LocalAPI_OnPlayStateChange(object sender, PlayStateEventArgs e)
         {
             PlayButton = e.Playing ? "" : "";
         }
 
+        /// <summary>
+        /// Handles track time changes (changes playing position)
+        /// </summary>
         private void LocalAPI_OnTrackTimeChange(object sender, TrackTimeChangeEventArgs e)
         {
             TrackStatus = e.TrackTime;
         }
 
+        /// <summary>
+        /// Handles track changing (currently the home of queueing logic)
+        /// </summary>
         private void LocalAPI_OnTrackChange(object sender, TrackChangeEventArgs e)
         {
             var status = _localApi.GetStatus();
 
-            if (!e.NewTrack.IsAd() && !status.Playing  && SongQueue.Count > 0)
+            if (!e.NewTrack.IsAd() && !status.Playing  && SongQueue.Count > 0) // requirements for queueing a new song
             {
                 var toPlay = SongQueue[0];
                 _localApi.PlayURL(toPlay.SpotifyUri);
@@ -338,7 +359,7 @@ namespace SoftServe
                     SongQueue.Remove(toPlay);
                 });
             }
-            else if (!e.NewTrack.IsAd())
+            else if (!e.NewTrack.IsAd()) // update now playing info
             {
                 ProgressInd = false;
                 CurrentSong = e.NewTrack.TrackResource.Name;
@@ -346,26 +367,34 @@ namespace SoftServe
                 TrackMax = e.NewTrack.Length;
                 CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
             }
-            else
+            else //Can't get data for ads
             {
                 ProgressInd = true;
                 CurrentSong = "Advertisement";
                 CurrentArtist = "If only the current user paid for premium...  Oh well.";
-                //CurrentAlbumArt = new Uri("NoArt.png");
 
             }
         }
 
+        /// <summary>
+        /// Forward/ skip button handler
+        /// </summary>
         private void Forward_Click(object sender, RoutedEventArgs e)
         {
             _localApi.Skip();
         }
 
+        /// <summary>
+        /// Back/ previous button handler
+        /// </summary>
         private void Back_Click(object sender, RoutedEventArgs e)
         {
             _localApi.Previous();
         }
 
+        /// <summary>
+        /// Play/pause button handler
+        /// </summary>
         private void PlayPauseClick(object sender, RoutedEventArgs e)
         {
             if (_localApi.GetStatus().Playing)
@@ -377,18 +406,13 @@ namespace SoftServe
                 _localApi.Play();
             }
         }
-        private async void LOL2_Click(object sender, RoutedEventArgs e)
-        {
-            var spotify = new SpotifyWebAPI() { UseAuth = false };
 
-            var tracks = await spotify.SearchItemsAsync("Say Something", SearchType.Track);
-            var track = tracks.Tracks.Items.First();
-
-            var newQ = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, "Parker");
-            SongQueue.Add(newQ);
-        }
-
-        private void CheckAndAdd(string SID, string username)
+        /// <summary>
+        /// Add to queue from ID *may be moved with command handling logic*
+        /// </summary>
+        /// <param name="SID"></param>
+        /// <param name="username"></param>
+        private void AddIdToQueue(string SID, string username)
         {
             var spotify = new SpotifyWebAPI() { UseAuth = false };
             var track = spotify.GetTrack(SID);
