@@ -1,0 +1,6 @@
+{
+  "name": "ProjectEthenyl",
+  "tagline": "For finger popping juke joints (not really though, unless you've sorted licensing) ",
+  "body": "### Welcome to Project Ethenyl.\r\nEthenyl is a new take on the jukebox - it connects with Spotify on your computer and allows friends and family to queue up music. Eventually I'd like to add a points system and other more interesting functionality, so keep up with changes!\r\n\r\n### Device Compatibility\r\nFor now, SoftServe (the desktop/server/music player) can only run on Windows (8+).  WaferCone (the control app) is being developed for multiple operating systems with a focus on Windows and Android to start (because I don't have a mac).",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
