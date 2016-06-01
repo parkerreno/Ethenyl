@@ -416,6 +416,13 @@ namespace SoftServe
         {
             var spotify = new SpotifyWebAPI() { UseAuth = false };
             var track = spotify.GetTrack(SID);
+            var status = _localApi.GetStatus();
+
+            if (!status.Playing && SongQueue.Count < 1) // If queue is empty and new song is queued, play it!
+            {
+                _localApi.PlayURL(track.Uri);
+                return;
+            }
 
             var newSong = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, username);
 
