@@ -162,6 +162,21 @@ namespace SoftServe
             }
         }
 
+        private string _hostName;
+
+        public string HostName
+        {
+            get { return _hostName; }
+            set
+            {
+                if (_hostName != value)
+                {
+                    _hostName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private ObservableCollection<QueuedSong> _songQueue;
 
         public ObservableCollection<QueuedSong> SongQueue
@@ -204,6 +219,10 @@ namespace SoftServe
 
             SocketListener sl = new SocketListener("5452");
             sl.ConnectionReceived += Sl_ConnectionReceived;
+
+            HostName = Dns.GetHostName();
+            IPBox.ItemsSource = Dns.GetHostAddresses(Dns.GetHostName());
+            IPBox.SelectedIndex = new Random(DateTime.Now.Millisecond).Next(0, IPBox.Items.Count);
         }
         
         /// <summary>

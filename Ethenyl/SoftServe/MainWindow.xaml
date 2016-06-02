@@ -51,7 +51,10 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackPanel Orientation="Horizontal" Grid.Row="3">
-                <TextBlock Text="Host Name:" ></TextBlock>
+                <TextBlock Text="Host Name:" Margin="0,0,6,0"></TextBlock>
+                <TextBlock Text="{Binding HostName}" Margin="0,0,6,0"></TextBlock>
+                <TextBlock Text="IP Address(es):" Margin="0,0,6,0"></TextBlock>
+                <ComboBox x:Name="IPBox"></ComboBox>
             </StackPanel>
         </Grid>
     </Grid>
