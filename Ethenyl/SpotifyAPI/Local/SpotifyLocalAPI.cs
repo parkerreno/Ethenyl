@@ -96,8 +96,8 @@ namespace SpotifyAPI.Local
             {
                 bool ethenyl = (newStatusResponse.Track.TrackResource?.Name ==
                                 _eventStatusResponse.Track.TrackResource?.Name && !newStatusResponse.Playing &&
-                                newStatusResponse.PlayingPosition+.5 < _eventStatusResponse.PlayingPosition); // This allows ethenyl to queue a song after a single song is play and stops.
-                if (newStatusResponse.Track.TrackResource?.Name != _eventStatusResponse.Track.TrackResource?.Name || ethenyl)
+                                newStatusResponse.PlayingPosition + .5 < _eventStatusResponse.PlayingPosition); // This allows ethenyl to queue a song after a single song is play and stops.
+                if (newStatusResponse.Track.TrackResource?.Name != _eventStatusResponse.Track.TrackResource?.Name || newStatusResponse.Track.AlbumResource?.Name != _eventStatusResponse.Track.AlbumResource?.Name || ethenyl)
                 {
                     OnTrackChange?.Invoke(this, new TrackChangeEventArgs()
                     {
@@ -160,7 +160,7 @@ namespace SpotifyAPI.Local
                 throw new NotSupportedException("This feature is only available on Windows 7 or newer");
             //Windows Vista Check
             if (Environment.OSVersion.Version.Major == 6)
-                if(Environment.OSVersion.Version.Minor == 0)
+                if (Environment.OSVersion.Version.Minor == 0)
                     throw new NotSupportedException("This feature is only available on Windows 7 or newer");
             VolumeMixerControl.MuteSpotify(true);
         }
