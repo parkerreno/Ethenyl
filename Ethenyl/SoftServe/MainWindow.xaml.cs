@@ -391,7 +391,6 @@ namespace SoftServe
                 ProgressInd = true;
                 CurrentSong = "Advertisement";
                 CurrentArtist = "If only the current user paid for premium...  Oh well.";
-
             }
         }
 
