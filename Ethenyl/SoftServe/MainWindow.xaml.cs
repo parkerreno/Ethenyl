@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -364,7 +366,7 @@ namespace SoftServe
         /// <summary>
         /// Handles track changing (currently the home of queueing logic)
         /// </summary>
-        private void LocalAPI_OnTrackChange(object sender, TrackChangeEventArgs e)
+        private async void LocalAPI_OnTrackChange(object sender, TrackChangeEventArgs e)
         {
             var status = _localApi.GetStatus();
 
@@ -385,6 +387,26 @@ namespace SoftServe
                 CurrentArtist = e.NewTrack.ArtistResource.Name;
                 TrackMax = e.NewTrack.Length;
                 CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
+                var color = BitmapProcessor.AveragesAreSometimesCool(e.NewTrack.GetAlbumArt(AlbumArtSize.Size160));
+                if (false) //RGB Lighting communication
+                {
+                    TcpClient client = new TcpClient();
+                    try
+                    {
+                        await client.ConnectAsync("192.168.1.128", 5453);
+                        using (var writer = new StreamWriter(client.GetStream()))
+                        {
+                            await writer.WriteLineAsync("SETRGB");
+                            await writer.WriteLineAsync($"{color.R}:{color.G}:{color.B}");
+                            await writer.WriteLineAsync("ENDTRANSMISSION");
+                            await writer.FlushAsync();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+
+                    }
+                }
             }
             else //Can't get data for ads
             {

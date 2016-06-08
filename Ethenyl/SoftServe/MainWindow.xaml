@@ -36,17 +36,11 @@
             <ListView x:Name="QueueList" Grid.Row="2" ItemsSource="{Binding SongQueue}" Background="{x:Null}" BorderThickness="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-                                <ColumnDefinition Width="*"></ColumnDefinition>
-                                <ColumnDefinition Width="Auto"></ColumnDefinition>
-
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Text="{Binding TrackName}" HorizontalAlignment="Left" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock Grid.Column="1" Text="{Binding TrackArtist}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
-                            <TextBlock Grid.Column="2" Text="{Binding QueuedBy}" HorizontalAlignment="Right" VerticalAlignment="Center"></TextBlock>
-                        </Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <TextBlock Text="{Binding TrackName}" Margin="0,0,9,0" FontFamily="Segoe UI Semibold" FontSize="22" ></TextBlock>
+                            <TextBlock Text="{Binding TrackArtist}" Margin="0,0,9,0" FontSize="22"></TextBlock>
+                            <TextBlock Text="{Binding QueuedBy}" Margin="0,0,9,0" FontSize="22"></TextBlock>
+                        </StackPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
