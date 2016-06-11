@@ -46,9 +46,14 @@
             </ListView>
             <StackPanel Orientation="Horizontal" Grid.Row="3">
                 <TextBlock Text="Host Name:" Margin="0,0,6,0"></TextBlock>
-                <TextBlock Text="{Binding HostName}" Margin="0,0,6,0"></TextBlock>
+                <TextBlock Text="{Binding HostName}" Margin="0,0,12,0"></TextBlock>
+                
                 <TextBlock Text="IP Address(es):" Margin="0,0,6,0"></TextBlock>
-                <ComboBox x:Name="IPBox"></ComboBox>
+                <ComboBox x:Name="IPBox" Margin="0,0,12,0"></ComboBox>
+
+                <TextBlock Text="PiRGB Lighting?" Margin="0,0,6,0"></TextBlock>
+                <CheckBox x:Name="PiRGBCheckbox"  Margin="0,2,6,0" ></CheckBox>
+                <TextBox x:Name="PiRGBHostname" Text="PiRGB HOSTNAME"></TextBox>
             </StackPanel>
         </Grid>
     </Grid>

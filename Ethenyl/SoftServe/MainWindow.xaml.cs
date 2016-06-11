@@ -387,13 +387,20 @@ namespace SoftServe
                 CurrentArtist = e.NewTrack.ArtistResource.Name;
                 TrackMax = e.NewTrack.Length;
                 CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
-                var color = BitmapProcessor.AveragesAreSometimesCool(e.NewTrack.GetAlbumArt(AlbumArtSize.Size160));
-                if (false) //RGB Lighting communication
+                bool rgb = false;
+                string host = "";
+                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
                 {
+                    rgb = PiRGBCheckbox.IsChecked.Value;
+                    host = PiRGBHostname.Text;
+                });
+                if (rgb) //RGB Lighting communication
+                {
+                    var color = BitmapProcessor.AveragesAreSometimesCool(e.NewTrack.GetAlbumArt(AlbumArtSize.Size160));
                     TcpClient client = new TcpClient();
                     try
                     {
-                        await client.ConnectAsync("192.168.1.128", 5453);
+                        await client.ConnectAsync(host, 5453);
                         using (var writer = new StreamWriter(client.GetStream()))
                         {
                             await writer.WriteLineAsync("SETRGB");
