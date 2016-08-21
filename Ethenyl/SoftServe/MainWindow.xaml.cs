@@ -486,5 +486,10 @@ namespace SoftServe
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
+
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            new SettingsWindow().Show();
+        }
     }
 }
