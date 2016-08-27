@@ -57,6 +57,24 @@ namespace SoftServe.ViewModels
             }
         }
 
+        private PlayerViewModel player;
+
+        /// <summary>
+        /// ViewModel for info regarding the player.
+        /// </summary>
+        public PlayerViewModel Player
+        {
+            get
+            {
+                if (player == null)
+                {
+                    player = new PlayerViewModel();
+                }
+
+                return player;
+            }
+        }
+
         private bool usePiRGB;
 
         /// <summary>
