@@ -167,6 +167,7 @@ namespace SoftServe.ViewModels
             var settings = Settings.Default;
             UsePiRGB = settings.UsePiRGB;
             PiRGBAddress = settings.PiRGBAddress;
+            ImageAdjustment = 1; // TODO: Remove this workaround to properly load 0 image adjust
             ImageAdjustment = settings.ImageAdjustment;
             BlurRadius = settings.BlurRadius;
         }
