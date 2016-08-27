@@ -322,6 +322,16 @@ namespace SoftServe
         }
 
         /// <summary>
+        /// Close additional windows when main window is closed
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _settingsWindow.Close(); // Close settings window if open.
+            base.OnClosing(e);
+        }
+
+        /// <summary>
         /// Handles click of settings button
         /// </summary>
         /// <param name="sender"></param>
