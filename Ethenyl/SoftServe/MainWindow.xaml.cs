@@ -4,20 +4,16 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media.Converters;
 using System.Windows.Media.Effects;
 using System.Windows.Threading;
 using SoftServe.PCL;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Enums;
-using System.Threading;
+using Newtonsoft.Json;
 
 namespace SoftServe
 {
@@ -164,21 +160,6 @@ namespace SoftServe
             }
         }
 
-        private string _hostName;
-
-        public string HostName
-        {
-            get { return _hostName; }
-            set
-            {
-                if (_hostName != value)
-                {
-                    _hostName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         private ObservableCollection<QueuedSong> _songQueue;
 
         public ObservableCollection<QueuedSong> SongQueue
@@ -195,7 +176,16 @@ namespace SoftServe
 
         private SpotifyLocalAPI _localApi;
 
+        /// <summary>
+        /// Used to limit user to one settings window to avoid confusion
+        /// </summary>
+        private SettingsWindow _settingsWindow;
+
         #endregion
+
+        /// <summary>
+        /// Creates a new main window
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
@@ -219,12 +209,10 @@ namespace SoftServe
 
             SyncStartingData();
 
+            _settingsWindow = new SettingsWindow();
+
             SocketListener sl = new SocketListener("5452");
             sl.ConnectionReceived += Sl_ConnectionReceived;
-
-            HostName = Dns.GetHostName();
-            IPBox.ItemsSource = Dns.GetHostAddresses(Dns.GetHostName());
-            IPBox.SelectedIndex = new Random(DateTime.Now.Millisecond).Next(0, IPBox.Items.Count);
         }
         
         /// <summary>
@@ -387,14 +375,10 @@ namespace SoftServe
                 CurrentArtist = e.NewTrack.ArtistResource.Name;
                 TrackMax = e.NewTrack.Length;
                 CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
-                bool rgb = false;
-                string host = "";
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
-                {
-                    rgb = PiRGBCheckbox.IsChecked.Value;
-                    host = PiRGBHostname.Text;
-                });
-                if (rgb) //RGB Lighting communication
+                bool useRgb = App.ViewModel.UsePiRGB;
+                string host = App.ViewModel.HostName;
+
+                if (useRgb) //RGB Lighting communication
                 {
                     var color = BitmapProcessor.AveragesAreSometimesCool(e.NewTrack.GetAlbumArt(AlbumArtSize.Size160));
                     TcpClient client = new TcpClient();
@@ -478,6 +462,24 @@ namespace SoftServe
                 SongQueue.Add(newSong);
             });
         }
+
+        /// <summary>
+        /// Handles click of settings button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            _settingsWindow.Hide(); // Hides and reshows the window to bring it into focus
+            _settingsWindow.Show();
+        }
+
+        private void ViewModelGet_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(JsonConvert.SerializeObject(App.ViewModel),
+                            "Current ViewModel Information");
+        }
+
         #region INPC Boilerplate
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -486,10 +488,5 @@ namespace SoftServe
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
-
-        private void Settings_Click(object sender, RoutedEventArgs e)
-        {
-            new SettingsWindow().Show();
-        }
     }
 }

@@ -46,7 +46,7 @@
             </ListView>
             <StackPanel Orientation="Horizontal" Grid.Row="3">
                 <Button Style="{StaticResource MediaButtons}" Content="" FontSize="12" Click="Settings_Click"></Button>
-                <TextBlock Text="Host Name:" Margin="0,0,6,0"></TextBlock>
+                <!--<TextBlock Text="Host Name:" Margin="0,0,6,0"></TextBlock>
                 <TextBlock Text="{Binding HostName}" Margin="0,0,12,0"></TextBlock>
                 
                 <TextBlock Text="IP Address(es):" Margin="0,0,6,0"></TextBlock>
@@ -54,7 +54,8 @@
 
                 <TextBlock Text="PiRGB Lighting?" Margin="0,0,6,0"></TextBlock>
                 <CheckBox x:Name="PiRGBCheckbox"  Margin="0,2,6,0" ></CheckBox>
-                <TextBox x:Name="PiRGBHostname" Text="PiRGB HOSTNAME"></TextBox>
+                <TextBox x:Name="PiRGBHostname" Text="PiRGB HOSTNAME"></TextBox>-->
+                <Button Content="DEBUG: Get ViewModel Information" Click="ViewModelGet_Click"></Button>
             </StackPanel>
         </Grid>
     </Grid>

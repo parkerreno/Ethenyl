@@ -34,5 +34,17 @@ namespace SoftServe.Properties {
                 this["UsePiRGB"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PiRGBAddress {
+            get {
+                return ((string)(this["PiRGBAddress"]));
+            }
+            set {
+                this["PiRGBAddress"] = value;
+            }
+        }
     }
 }

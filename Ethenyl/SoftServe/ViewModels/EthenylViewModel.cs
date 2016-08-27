@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,14 +16,46 @@ namespace SoftServe.ViewModels
     {
         public EthenylViewModel()
         {
-            var settings = Settings.Default;
-            UsePiRGB = settings.UsePiRGB;
+            LoadSettings();
+            HostName = Dns.GetHostName();
         }
 
         /// <summary>
         /// Property changed notification
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private string hostName;
+
+        public string HostName
+        {
+            get { return hostName; }
+            set
+            {
+                if (hostName != value)
+                {
+                    hostName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private ObservableCollection<string> ipAddresses;
+
+        /// <summary>
+        /// Gets a list of IPAddresses
+        /// </summary>
+        public ObservableCollection<string> IPAddresses
+        {
+            get
+            {
+                if (ipAddresses == null)
+                {
+                    ipAddresses = new ObservableCollection<string>(Dns.GetHostAddresses(HostName).Select(x=>x.ToString()));
+                }
+                return ipAddresses;
+            }
+        }
 
         private bool usePiRGB;
 
@@ -44,6 +78,36 @@ namespace SoftServe.ViewModels
                     Settings.Default.Save();
                 }
             }
+        }
+
+        private string piRGBAddress;
+
+        /// <summary>
+        /// Address to use to connect to PiRGB
+        /// </summary>
+        public string PiRGBAddress
+        {
+            get { return piRGBAddress; }
+            set
+            {
+                if (PiRGBAddress != value)
+                {
+                    piRGBAddress = value;
+                    OnPropertyChanged();
+                    Settings.Default.PiRGBAddress = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Loads previously saved settings
+        /// </summary>
+        private void LoadSettings()
+        {
+            var settings = Settings.Default;
+            UsePiRGB = settings.UsePiRGB;
+            PiRGBAddress = settings.PiRGBAddress;
         }
 
         /// <summary>

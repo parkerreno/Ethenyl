@@ -4,8 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:SoftServe"
+        xmlns:properties="clr-namespace:SoftServe.Properties"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="300" Width="300">
+        Title="SettingsWindow" Height="600" Width="480">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -15,11 +16,22 @@
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
+            <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        
-        <TextBlock Grid.ColumnSpan="2">Soft Serve Settings</TextBlock>
 
-        <TextBlock Grid.Row="1" Text="UsePiRGB Lighting: "></TextBlock>
-        <CheckBox Grid.Row="1" Grid.Column="1"></CheckBox>
+        <TextBlock Grid.ColumnSpan="2" Text="{x:Static properties:Resources.SettingsHeader}" Style="{StaticResource SettingsHeader}"></TextBlock>
+
+        <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static properties:Resources.UsePiRGB}" ToolTip="{x:Static properties:Resources.UsePiRGBHelp}" Style="{StaticResource SettingsItem}"></TextBlock>
+        <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding UsePiRGB, Mode=TwoWay}" Style="{StaticResource SettingsSetting}"></CheckBox>
+
+        <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static properties:Resources.PiRGBAddress}" ToolTip="{x:Static properties:Resources.PiRGBAddressHelp}" Style="{StaticResource SettingsItem}"></TextBlock>
+        <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding PiRGBAddress, Mode=TwoWay, FallbackValue='PiRGB address bind failed'}" Style="{StaticResource SettingsSetting}"></TextBox>
+
+        <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static properties:Resources.HostName}" ToolTip="{x:Static properties:Resources.HostNameHelp}" Style="{StaticResource SettingsItem}"></TextBlock>
+        <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding HostName, FallbackValue='Hostname failed to bind'}" VerticalAlignment="Center"></TextBlock>
+
+        <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static properties:Resources.IPAddress}" ToolTip="{x:Static properties:Resources.IPAddressHelp}" Style="{StaticResource SettingsItem}"></TextBlock>
+        <ListView Grid.Row="4" Grid.Column="1" ItemsSource="{Binding IPAddresses}" Style="{StaticResource SettingsSetting}"></ListView>
     </Grid>
 </Window>

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using SoftServe.ViewModels;
 
 namespace SoftServe
 {
@@ -19,9 +20,16 @@ namespace SoftServe
     /// </summary>
     public partial class SettingsWindow : Window
     {
+        private EthenylViewModel viewModel;
+
+        /// <summary>
+        /// Initializes the settings window
+        /// </summary>
         public SettingsWindow()
         {
             InitializeComponent();
+            viewModel = App.ViewModel;
+            this.DataContext = viewModel;
         }
     }
 }
