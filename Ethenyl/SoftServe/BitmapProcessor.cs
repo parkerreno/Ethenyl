@@ -9,19 +9,27 @@ using Color = System.Drawing.Color;
 
 namespace SoftServe
 {
+    /// <summary>
+    /// Bitmap processor class (for album art)
+    /// </summary>
     public class BitmapProcessor
     {
-        public static Color AverageColor(Bitmap b)
+        /// <summary>
+        /// Gets the mean color of the image
+        /// </summary>
+        /// <param name="bitmap">Bitmap image</param>
+        /// <returns>Returns the mathematical mean color of the image</returns>
+        public static Color AverageColor(Bitmap bitmap)
         {
             int r = 0;
             int g = 0;
             int bl = 0;
-            int total = b.Height * b.Width;
-            for (int x = 0; x < b.Width; x++)
+            int total = bitmap.Height * bitmap.Width;
+            for (int x = 0; x < bitmap.Width; x++)
             {
-                for (int y = 0; y < b.Height; y++)
+                for (int y = 0; y < bitmap.Height; y++)
                 {
-                    var pixel = b.GetPixel(x, y);
+                    var pixel = bitmap.GetPixel(x, y);
                     r += pixel.R;
                     g += pixel.G;
                     bl += pixel.B;
@@ -34,20 +42,20 @@ namespace SoftServe
         /// <summary>
         /// This is more the result of me playing around and shouldn't actually be used...  However, it tends to be quicker and provide a value close to the real one.
         /// </summary>
-        /// <param name="bmp"></param>
+        /// <param name="bitmap"></param>
         /// <returns></returns>
-        public static Color QuickAveragishColor(Bitmap bmp)
+        public static Color QuickAveragishColor(Bitmap bitmap)
         {
             int r = 0;
             int g = 0;
             int b = 0;
 
             var rand = new Random(DateTime.Now.Millisecond);
-            int totalPixels = rand.Next(1, bmp.Height * bmp.Width / 6);
+            int totalPixels = rand.Next(1, bitmap.Height * bitmap.Width / 6);
 
             for (int i = 0; i < totalPixels; i++)
             {
-                var pixel = bmp.GetPixel(rand.Next(0, bmp.Width), rand.Next(0, bmp.Height));
+                var pixel = bitmap.GetPixel(rand.Next(0, bitmap.Width), rand.Next(0, bitmap.Height));
                 r += pixel.R;
                 g += pixel.G;
                 b += pixel.B;
@@ -58,15 +66,15 @@ namespace SoftServe
 
 
 
-        public static Color MainColor(Bitmap bmp)
+        public static Color MainColor(Bitmap bitmap)
         {
             Dictionary<RGB, int> savedColors = new Dictionary<RGB, int>();
-            for (int x = 0; x < bmp.Width; x++)
+            for (int x = 0; x < bitmap.Width; x++)
             {
-                for (int y = 0; y < bmp.Height; y++)
+                for (int y = 0; y < bitmap.Height; y++)
                 {
                     bool found = false;
-                    var pixel = bmp.GetPixel(x, y);
+                    var pixel = bitmap.GetPixel(x, y);
                     var thisRgb = new RGB() { Red = pixel.R, Blue = pixel.B, Green = pixel.G };
                     
                     List<RGB> toIncremement = new List<RGB>();
@@ -92,16 +100,16 @@ namespace SoftServe
             return Color.FromArgb(max.Key.Red, max.Key.Green, max.Key.Blue);
         }
 
-        public static Color AveragesAreSometimesCool(Bitmap bmp)
+        public static Color AveragesAreSometimesCool(Bitmap bitmap)
         {
-            var avg = QuickAveragishColor(bmp);
+            var avg = QuickAveragishColor(bitmap);
             var rgdiff = Math.Abs(avg.R - avg.G);
             var rbdiff = Math.Abs(avg.R - avg.B);
             var gbdiff = Math.Abs(avg.G - avg.B);
 
             if (rgdiff < 30 && rbdiff < 30 && gbdiff < 30)
             {
-                return MainColor(bmp);
+                return MainColor(bitmap);
             }
             else
             {

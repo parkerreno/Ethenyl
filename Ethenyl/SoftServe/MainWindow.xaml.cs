@@ -4,20 +4,18 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Media.Converters;
+using System.Windows.Controls;
 using System.Windows.Media.Effects;
 using System.Windows.Threading;
 using SoftServe.PCL;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
-using SpotifyAPI.Web.Enums;
-using System.Threading;
+using Newtonsoft.Json;
+using SoftServe.ViewModels;
 
 namespace SoftServe
 {
@@ -27,180 +25,30 @@ namespace SoftServe
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         #region Properties & Members
-        public BlurEffect BlurEffect { get; set; } = new BlurEffect() { Radius = 57, RenderingBias = RenderingBias.Quality };
 
-        private string _playButton;
-
-        public string PlayButton
-        {
-            get
-            {
-                return _playButton;
-            }
-            set
-            {
-                if (value != _playButton)
-                {
-                    _playButton = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _currentSong;
-
-        public string CurrentSong
-        {
-            get { return _currentSong; }
-            set
-            {
-                if (value != _currentSong)
-                {
-                    _currentSong = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _currentArtist;
-
-        public string CurrentArtist
-        {
-            get
-            {
-                return _currentArtist;
-            }
-            set
-            {
-                if (value != _currentArtist)
-                {
-                    _currentArtist = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private Uri _currentAlbumArt;
-
-        public Uri CurrentAlbumArt
-        {
-            get { return _currentAlbumArt; }
-            set
-            {
-                if (!value.Equals(_currentAlbumArt))
-                {
-                    _currentAlbumArt = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private double _trackStatus;
-
-        public double TrackStatus
-        {
-            get
-            {
-                return _trackStatus;
-            }
-            set
-            {
-                if (value != _trackStatus)
-                {
-                    _trackStatus = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private double _trackMax;
-
-        public double TrackMax
-        {
-            get
-            {
-                return _trackMax;
-            }
-            set
-            {
-                if (_trackMax != value)
-                {
-                    _trackMax = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private bool _progressInd;
-
-        public bool ProgressInd
-        {
-            get
-            {
-                return _progressInd;
-            }
-            set
-            {
-                if (value != _progressInd)
-                {
-                    _progressInd = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private double _maxEdge;
-
-        public double MaxEdge
-        {
-            get { return _maxEdge; }
-            set
-            {
-                if (value != _maxEdge)
-                {
-                    _maxEdge = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private string _hostName;
-
-        public string HostName
-        {
-            get { return _hostName; }
-            set
-            {
-                if (_hostName != value)
-                {
-                    _hostName = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
-        private ObservableCollection<QueuedSong> _songQueue;
-
-        public ObservableCollection<QueuedSong> SongQueue
-        {
-            get
-            {
-                if (_songQueue == null)
-                {
-                    _songQueue = new ObservableCollection<QueuedSong>();
-                }
-                return _songQueue;
-            }
-        }//Yeah we're using an observable collection instead of a queue so we can display the list of upcoming songs. 
+        private EthenylViewModel _dataContext;
+        private PlayerViewModel _playerModel;
 
         private SpotifyLocalAPI _localApi;
 
+        /// <summary>
+        /// Used to limit user to one settings window to avoid confusion
+        /// </summary>
+        private SettingsWindow _settingsWindow;
+
         #endregion
+
+        /// <summary>
+        /// Creates a new main window
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = this;
-            QueueList.ItemsSource = SongQueue;
+            DataContext = App.ViewModel;
+            _dataContext = DataContext as EthenylViewModel;
+            _playerModel = _dataContext.Player;
+
+            QueueList.ItemsSource = _playerModel.SongQueue;
 
             if (!SpotifyLocalAPI.IsSpotifyRunning())
                 SpotifyLocalAPI.RunSpotify();
@@ -215,16 +63,14 @@ namespace SoftServe
             _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
             SizeChanged += MainWindow_SizeChanged;
 
-            MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
+            _dataContext.Player.MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
 
             SyncStartingData();
 
+            _settingsWindow = new SettingsWindow();
+
             SocketListener sl = new SocketListener("5452");
             sl.ConnectionReceived += Sl_ConnectionReceived;
-
-            HostName = Dns.GetHostName();
-            IPBox.ItemsSource = Dns.GetHostAddresses(Dns.GetHostName());
-            IPBox.SelectedIndex = new Random(DateTime.Now.Millisecond).Next(0, IPBox.Items.Count);
         }
         
         /// <summary>
@@ -309,11 +155,11 @@ namespace SoftServe
         {
             if (e.NewSize.Height > e.NewSize.Width)
             {
-                MaxEdge = e.NewSize.Height * 1.05; // Make it a little bigger to avoid white borders
+                _playerModel.MaxEdge = e.NewSize.Height * 1.05; // Make it a little bigger to avoid white borders
             }
             else
             {
-                MaxEdge = e.NewSize.Width * 1.05;
+                _playerModel.MaxEdge = e.NewSize.Width * 1.05;
             }
         }
 
@@ -329,21 +175,21 @@ namespace SoftServe
                 Application.Current.Shutdown();
             }
             var status = _localApi.GetStatus();
-            PlayButton = status.Playing ? "" : ""; // Pause button, play button
+            _playerModel.PlayButton = status.Playing ? "" : ""; // Pause button, play button
             if (status.Track == null || status.Track.IsAd())
             {
-                ProgressInd = true;
-                CurrentSong = "Advertisement";
-                CurrentArtist = "If only the current user paid for premium...  Oh well.";
+                _playerModel.ProgressInd = true;
+                _playerModel.CurrentSong = "Advertisement";
+                _playerModel.CurrentArtist = "If only the current user paid for premium...  Oh well.";
                 //CurrentAlbumArt = new Uri("NoArt.png");
             }
             else
             {
-                CurrentArtist = status.Track.ArtistResource.Name;
-                CurrentSong = status.Track.TrackResource.Name;
-                CurrentAlbumArt = new Uri(status.Track.GetAlbumArtUrl(AlbumArtSize.Size640));
+                _playerModel.CurrentArtist = status.Track.ArtistResource.Name;
+                _playerModel.CurrentSong = status.Track.TrackResource.Name;
+                _playerModel.CurrentAlbumArt = new Uri(status.Track.GetAlbumArtUrl(AlbumArtSize.Size640));
 
-                TrackMax = status.Track.Length;
+                _playerModel.TrackMax = status.Track.Length;
             }
         }
 
@@ -352,7 +198,7 @@ namespace SoftServe
         /// </summary>
         private void LocalAPI_OnPlayStateChange(object sender, PlayStateEventArgs e)
         {
-            PlayButton = e.Playing ? "" : "";
+            _playerModel.PlayButton = e.Playing ? "" : "";
         }
 
         /// <summary>
@@ -360,7 +206,7 @@ namespace SoftServe
         /// </summary>
         private void LocalAPI_OnTrackTimeChange(object sender, TrackTimeChangeEventArgs e)
         {
-            TrackStatus = e.TrackTime;
+            _playerModel.TrackStatus = e.TrackTime;
         }
 
         /// <summary>
@@ -370,31 +216,27 @@ namespace SoftServe
         {
             var status = _localApi.GetStatus();
 
-            if (!e.NewTrack.IsAd() && !status.Playing  && SongQueue.Count > 0) // requirements for queueing a new song
+            if (!e.NewTrack.IsAd() && !status.Playing  && _playerModel.SongQueue.Count > 0) // requirements for queueing a new song
             {
-                var toPlay = SongQueue[0];
+                var toPlay = _playerModel.SongQueue[0];
                 _localApi.PlayURL(toPlay.SpotifyUri);
 
                 Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
                 {
-                    SongQueue.Remove(toPlay);
+                    _playerModel.SongQueue.Remove(toPlay);
                 });
             }
             else if (!e.NewTrack.IsAd()) // update now playing info
             {
-                ProgressInd = false;
-                CurrentSong = e.NewTrack.TrackResource.Name;
-                CurrentArtist = e.NewTrack.ArtistResource.Name;
-                TrackMax = e.NewTrack.Length;
-                CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
-                bool rgb = false;
-                string host = "";
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
-                {
-                    rgb = PiRGBCheckbox.IsChecked.Value;
-                    host = PiRGBHostname.Text;
-                });
-                if (rgb) //RGB Lighting communication
+                _playerModel.ProgressInd = false;
+                _playerModel.CurrentSong = e.NewTrack.TrackResource.Name;
+                _playerModel.CurrentArtist = e.NewTrack.ArtistResource.Name;
+                _playerModel.TrackMax = e.NewTrack.Length;
+                _playerModel.CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
+                bool useRgb = App.ViewModel.UsePiRGB;
+                string host = App.ViewModel.HostName;
+
+                if (useRgb) //RGB Lighting communication
                 {
                     var color = BitmapProcessor.AveragesAreSometimesCool(e.NewTrack.GetAlbumArt(AlbumArtSize.Size160));
                     TcpClient client = new TcpClient();
@@ -417,9 +259,9 @@ namespace SoftServe
             }
             else //Can't get data for ads
             {
-                ProgressInd = true;
-                CurrentSong = "Advertisement";
-                CurrentArtist = "If only the current user paid for premium...  Oh well.";
+                _playerModel.ProgressInd = true;
+                _playerModel.CurrentSong = "Advertisement";
+                _playerModel.CurrentArtist = "If only the current user paid for premium...  Oh well.";
             }
         }
 
@@ -465,7 +307,7 @@ namespace SoftServe
             var track = spotify.GetTrack(SID);
             var status = _localApi.GetStatus();
 
-            if (!status.Playing && SongQueue.Count < 1) // If queue is empty and new song is queued, play it!
+            if (!status.Playing && _playerModel.SongQueue.Count < 1) // If queue is empty and new song is queued, play it!
             {
                 _localApi.PlayURL(track.Uri);
                 return;
@@ -475,9 +317,31 @@ namespace SoftServe
 
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
             {
-                SongQueue.Add(newSong);
+                _playerModel.SongQueue.Add(newSong);
             });
         }
+
+        /// <summary>
+        /// Close additional windows when main window is closed
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            _settingsWindow.Close(); // Close settings window if open.
+            base.OnClosing(e);
+        }
+
+        /// <summary>
+        /// Handles click of settings button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Settings_Click(object sender, RoutedEventArgs e)
+        {
+            _settingsWindow.Hide(); // Hides and reshows the window to bring it into focus
+            _settingsWindow.Show();
+        }
+
         #region INPC Boilerplate
         public event PropertyChangedEventHandler PropertyChanged;
 

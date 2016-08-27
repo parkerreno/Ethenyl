@@ -243,3 +243,6 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/Ethenyl/SpotifyAPI/Settings.StyleCop
+/Ethenyl/SoftServe/Settings.StyleCop
+/Ethenyl/SoftServe.PCL/Settings.StyleCop

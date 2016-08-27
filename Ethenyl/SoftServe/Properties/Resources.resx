@@ -46,7 +46,7 @@
     
     mimetype: application/x-microsoft.net.object.binary.base64
     value   : The object must be serialized with 
-            : System.Serialization.Formatters.Binary.BinaryFormatter
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
             : and then encoded with base64 encoding.
     
     mimetype: application/x-microsoft.net.object.soap.base64
@@ -60,6 +60,7 @@
             : and then encoded with base64 encoding.
     -->
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
       <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
@@ -68,9 +69,10 @@
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" />
+              <xsd:attribute name="name" use="required" type="xsd:string" />
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
@@ -85,9 +87,10 @@
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
               </xsd:sequence>
-              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
             </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
@@ -109,9 +112,70 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AppName" xml:space="preserve">
+    <value>Soft Serve</value>
+    <comment>[appwide]</comment>
+  </data>
+  <data name="BackgroundSection" xml:space="preserve">
+    <value>Background Image Settings</value>
+  </data>
+  <data name="HostName" xml:space="preserve">
+    <value>Host Name:</value>
+    <comment>[settingspage] Computer hostname to aid connecting via WaferCone</comment>
+  </data>
+  <data name="HostNameHelp" xml:space="preserve">
+    <value>Use this to connect to SoftServe via WaferCone.</value>
+    <comment>[settingspage]</comment>
+  </data>
+  <data name="ImageAdjust" xml:space="preserve">
+    <value>Brightness(?) adjustment</value>
+  </data>
+  <data name="ImageAdjustHelp" xml:space="preserve">
+    <value>0 will darken the image, while 255 will lighten it.  This setting is somewhat experimental right now. DEFAULT: 58.</value>
+  </data>
+  <data name="ImageBlur" xml:space="preserve">
+    <value>Blur radius (amount)</value>
+  </data>
+  <data name="ImageBlurHelp" xml:space="preserve">
+    <value>Higher values will result in a blurrier background image. DEFAULT: 57.</value>
+  </data>
+  <data name="IPAddress" xml:space="preserve">
+    <value>IP Addresses: </value>
+    <comment>[settingspage] IP Addresses label for settings</comment>
+  </data>
+  <data name="IPAddressHelp" xml:space="preserve">
+    <value>Try these IP addresses if connecting via hostname isn't working.  Also be sure you allow SoftServe through your firewall.</value>
+    <comment>[settingspage]</comment>
+  </data>
+  <data name="NetworkingSection" xml:space="preserve">
+    <value>Networking Information</value>
+  </data>
+  <data name="PiRGBAddress" xml:space="preserve">
+    <value>Pi RGB IP Address: </value>
+    <comment>[settingspage] PiRGB address prompt for settings</comment>
+  </data>
+  <data name="PiRGBAddressHelp" xml:space="preserve">
+    <value>The hostname or IP address of your PiRGB device.</value>
+    <comment>[settingspage]</comment>
+  </data>
+  <data name="PiRGBSection" xml:space="preserve">
+    <value>PiRGB Settings</value>
+  </data>
+  <data name="SettingsHeader" xml:space="preserve">
+    <value>Soft Serve Settings</value>
+    <comment>[settingspage]</comment>
+  </data>
+  <data name="UsePiRGB" xml:space="preserve">
+    <value>Use PiRGB Lighting: </value>
+    <comment>[settingspage] Use PiRGB lighting prompt for settings</comment>
+  </data>
+  <data name="UsePiRGBHelp" xml:space="preserve">
+    <value>Enable this setting if you want to control a PiRGB device with Soft Serve.</value>
+    <comment>[settingspage]</comment>
+  </data>
 </root>

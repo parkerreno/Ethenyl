@@ -6,8 +6,8 @@
         xmlns:local="clr-namespace:SoftServe"
         mc:Ignorable="d"
         Title="Soft Serve" Height="720" Width="1280">
-    <Grid Background="#FF3A3A3A">
-        <Image Panel.ZIndex="-99" Source="{Binding CurrentAlbumArt}" Effect="{Binding BlurEffect}" Opacity="0.73" Width="{Binding MaxEdge}" Height="{Binding MaxEdge}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <Grid Background="{Binding Player.ImageAdjustment}">
+        <Image Panel.ZIndex="-99" Source="{Binding Player.CurrentAlbumArt}" Effect="{Binding Player.BlurEffect}" Opacity="0.73" Width="{Binding Player.MaxEdge}" Height="{Binding Player.MaxEdge}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="*"></RowDefinition>
@@ -16,10 +16,10 @@
                 <RowDefinition Height="Auto"></RowDefinition>
             </Grid.RowDefinitions>
             <StackPanel Orientation="Horizontal">
-                <Image Source="{Binding CurrentAlbumArt}" Margin="12"></Image>
+                <Image Source="{Binding Player.CurrentAlbumArt}" Margin="12"></Image>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center">
-                    <TextBlock Text="{Binding CurrentSong, FallbackValue='Failed to bind trackname'}" FontFamily="Segoe UI Semibold" FontSize="48"></TextBlock>
-                    <TextBlock Text="{Binding CurrentArtist, FallbackValue='Failed to bind artistname'}" FontSize="26"></TextBlock>
+                    <TextBlock Text="{Binding Player.CurrentSong, FallbackValue='Failed to bind trackname'}" FontFamily="Segoe UI Semibold" FontSize="48"></TextBlock>
+                    <TextBlock Text="{Binding Player.CurrentArtist, FallbackValue='Failed to bind artistname'}" FontSize="26"></TextBlock>
                 </StackPanel>
             </StackPanel>
             <Grid Grid.Row="1" >
@@ -28,12 +28,12 @@
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Grid.Row="0">
                     <Button Content="" Style="{StaticResource MediaButtons}" Click="Back_Click"/>
-                    <Button Content="{Binding PlayButton, FallbackValue=''}" Style="{StaticResource MediaButtons}" Click="PlayPauseClick" />
+                    <Button Content="{Binding Player.PlayButton, FallbackValue=''}" Style="{StaticResource MediaButtons}" Click="PlayPauseClick" />
                     <Button Content="" Style="{StaticResource MediaButtons}" Click="Forward_Click"/>
                 </StackPanel>
-                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
+                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding Player.ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
             </Grid>
-            <ListView x:Name="QueueList" Grid.Row="2" ItemsSource="{Binding SongQueue}" Background="{x:Null}" BorderThickness="0">
+            <ListView x:Name="QueueList" Grid.Row="2" ItemsSource="{Binding Player.SongQueue}" Background="{x:Null}" BorderThickness="0">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -45,15 +45,7 @@
                 </ListView.ItemTemplate>
             </ListView>
             <StackPanel Orientation="Horizontal" Grid.Row="3">
-                <TextBlock Text="Host Name:" Margin="0,0,6,0"></TextBlock>
-                <TextBlock Text="{Binding HostName}" Margin="0,0,12,0"></TextBlock>
-                
-                <TextBlock Text="IP Address(es):" Margin="0,0,6,0"></TextBlock>
-                <ComboBox x:Name="IPBox" Margin="0,0,12,0"></ComboBox>
-
-                <TextBlock Text="PiRGB Lighting?" Margin="0,0,6,0"></TextBlock>
-                <CheckBox x:Name="PiRGBCheckbox"  Margin="0,2,6,0" ></CheckBox>
-                <TextBox x:Name="PiRGBHostname" Text="PiRGB HOSTNAME"></TextBox>
+                <Button Style="{StaticResource MediaButtons}" Content="" FontSize="12" Click="Settings_Click"></Button>
             </StackPanel>
         </Grid>
     </Grid>

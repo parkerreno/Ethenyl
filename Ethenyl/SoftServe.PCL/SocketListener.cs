@@ -14,17 +14,27 @@ namespace SoftServe.PCL
     public class SocketListener
     {
         private StreamSocketListener listener;
-        public event EventHandler<Queue<string>> ConnectionReceived;
+
+        /// <summary>
+        /// Creates a new socket listener wrapper
+        /// </summary>
+        /// <param name="socket">Endpoint name (port)</param>
         public SocketListener(string socket)
         {
-            SetupListener(socket);
+            this.SetupListener(socket);
         }
+
+        /// <summary>
+        /// Fired when connection to the listener is received
+        /// </summary>
+        public event EventHandler<Queue<string>> ConnectionReceived;
 
         /// <summary>
         /// New connection received
         /// </summary>
-        private async void Listener_ConnectionReceived(StreamSocketListener sender,
-            StreamSocketListenerConnectionReceivedEventArgs args)
+        /// <param name="sender">Sender</param>
+        /// <param name="args">Arguments</param>
+        private async void Listener_ConnectionReceived(StreamSocketListener sender, StreamSocketListenerConnectionReceivedEventArgs args)
         {
             using (var recvStr = args.Socket.InputStream.AsStreamForRead())
             {
@@ -44,6 +54,7 @@ namespace SoftServe.PCL
                                 go = false;
                                 continue;
                             }
+
                             receivedStuff.Enqueue(line);
                         } while (go);
                         ConnectionReceived?.Invoke(sender, receivedStuff);
@@ -51,12 +62,15 @@ namespace SoftServe.PCL
                     catch (Exception e)
                     {
                         Debug.WriteLine(e.Message);
-                       
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Creates the listener (does async stuff)
+        /// </summary>
+        /// <param name="endpointName">Name of endpoint (port)</param>
         private async void SetupListener(string endpointName)
         {
             listener = new StreamSocketListener();

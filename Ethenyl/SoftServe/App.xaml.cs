@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using SoftServe.ViewModels;
 
 namespace SoftServe
 {
@@ -13,5 +14,19 @@ namespace SoftServe
     /// </summary>
     public partial class App : Application
     {
+        private static EthenylViewModel viewModel;
+
+        public static EthenylViewModel ViewModel
+        {
+            get
+            {
+                if (viewModel == null)
+                {
+                    viewModel = new EthenylViewModel();
+                }
+
+                return viewModel;
+            }
+        }
     }
 }
