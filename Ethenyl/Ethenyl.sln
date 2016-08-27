@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftServe", "SoftServe\SoftServe.csproj", "{AF1EB376-0E5B-4C7F-8476-2EA99EFEED62}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoftServe.PCL", "SoftServe.PCL\SoftServe.PCL.csproj", "{8EB73B94-2EB2-4FBA-9CC1-1B4EA5EC4A7C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpotifyAPI", "SpotifyAPI\SpotifyAPI.csproj", "{EBBE35E2-7B91-4D7D-B8FC-3A0472F5119D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{831F2414-5061-48ED-BC95-30250C5089F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{DE87D479-77EA-4A0D-86FA-2882D7E25F40}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -101,5 +105,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{AF1EB376-0E5B-4C7F-8476-2EA99EFEED62} = {831F2414-5061-48ED-BC95-30250C5089F3}
+		{8EB73B94-2EB2-4FBA-9CC1-1B4EA5EC4A7C} = {831F2414-5061-48ED-BC95-30250C5089F3}
 	EndGlobalSection
 EndGlobal
