@@ -57,7 +57,7 @@ namespace SoftServe
             _localApi = new SpotifyLocalAPI();
             _localApi.Connect();
             _localApi.ListenForEvents = true;
-
+            
             _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
             _localApi.OnTrackChange += LocalAPI_OnTrackChange;
             _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
@@ -341,6 +341,25 @@ namespace SoftServe
             _settingsWindow.Close(); // Closes and reopens the window to bring into focus
             _settingsWindow = new SettingsWindow();
             _settingsWindow.Show();
+        }
+
+        /// <summary>
+        /// Toggles between fullscreen and normal window mode
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void FullscreenToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowStyle == WindowStyle.None)
+            {
+                this.WindowStyle = WindowStyle.SingleBorderWindow;
+                this.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                this.WindowStyle = WindowStyle.None;
+                this.WindowState = WindowState.Maximized;
+            }
         }
 
         #region INPC Boilerplate
