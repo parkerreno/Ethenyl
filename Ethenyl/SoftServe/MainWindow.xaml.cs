@@ -338,7 +338,8 @@ namespace SoftServe
         /// <param name="e"></param>
         private void Settings_Click(object sender, RoutedEventArgs e)
         {
-            _settingsWindow.Hide(); // Hides and reshows the window to bring it into focus
+            _settingsWindow.Close(); // Closes and reopens the window to bring into focus
+            _settingsWindow = new SettingsWindow();
             _settingsWindow.Show();
         }
 
