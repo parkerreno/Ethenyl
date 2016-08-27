@@ -46,5 +46,29 @@ namespace SoftServe.Properties {
                 this["PiRGBAddress"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("57")]
+        public double BlurRadius {
+            get {
+                return ((double)(this["BlurRadius"]));
+            }
+            set {
+                this["BlurRadius"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("58")]
+        public int ImageAdjustment {
+            get {
+                return ((int)(this["ImageAdjustment"]));
+            }
+            set {
+                this["ImageAdjustment"] = value;
+            }
+        }
     }
 }

@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
 using SoftServe.Properties;
 
 namespace SoftServe.ViewModels
@@ -17,7 +19,6 @@ namespace SoftServe.ViewModels
         public EthenylViewModel()
         {
             LoadSettings();
-            HostName = Dns.GetHostName();
         }
 
         /// <summary>
@@ -29,14 +30,14 @@ namespace SoftServe.ViewModels
 
         public string HostName
         {
-            get { return hostName; }
-            set
+            get
             {
-                if (hostName != value)
+                if (hostName == null)
                 {
-                    hostName = value;
+                    hostName = Dns.GetHostName();
                     OnPropertyChanged();
                 }
+                return hostName;
             }
         }
 
@@ -52,6 +53,7 @@ namespace SoftServe.ViewModels
                 if (ipAddresses == null)
                 {
                     ipAddresses = new ObservableCollection<string>(Dns.GetHostAddresses(HostName).Select(x=>x.ToString()));
+                    OnPropertyChanged();
                 }
                 return ipAddresses;
             }
@@ -72,6 +74,45 @@ namespace SoftServe.ViewModels
                 }
 
                 return player;
+            }
+        }
+
+        private int imageAdjustment;
+
+        public int ImageAdjustment
+        {
+            get
+            {
+                return imageAdjustment;
+            }
+            set
+            {
+                if (value != imageAdjustment && value >= 0 && value < 256)
+                {
+                    imageAdjustment = value;
+                    OnPropertyChanged();
+                    this.Player.ImageAdjustment = new SolidColorBrush(Color.FromArgb(255, (byte) value, (byte) value, (byte) value));
+                    Settings.Default.ImageAdjustment = value;
+                    Settings.Default.Save();
+                }
+            }
+        }
+
+        private double blurRadius;
+
+        public double BlurRadius
+        {
+            get { return blurRadius; }
+            set
+            {
+                if (Math.Abs(value - blurRadius) > 0.1)
+                {
+                    blurRadius = value;
+                    OnPropertyChanged();
+                    this.Player.BlurEffect = new BlurEffect() { Radius = BlurRadius, RenderingBias = RenderingBias.Quality };
+                    Settings.Default.BlurRadius = value;
+                    Settings.Default.Save();
+                }
             }
         }
 
@@ -126,6 +167,8 @@ namespace SoftServe.ViewModels
             var settings = Settings.Default;
             UsePiRGB = settings.UsePiRGB;
             PiRGBAddress = settings.PiRGBAddress;
+            ImageAdjustment = settings.ImageAdjustment;
+            BlurRadius = settings.BlurRadius;
         }
 
         /// <summary>

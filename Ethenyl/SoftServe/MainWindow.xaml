@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SoftServe"
         mc:Ignorable="d"
         Title="Soft Serve" Height="720" Width="1280">
-    <Grid Background="#FF3A3A3A">
+    <Grid Background="{Binding Player.ImageAdjustment}">
         <Image Panel.ZIndex="-99" Source="{Binding Player.CurrentAlbumArt}" Effect="{Binding Player.BlurEffect}" Opacity="0.73" Width="{Binding Player.MaxEdge}" Height="{Binding Player.MaxEdge}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Grid>
             <Grid.RowDefinitions>

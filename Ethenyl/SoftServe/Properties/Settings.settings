@@ -8,5 +8,11 @@
     <Setting Name="PiRGBAddress" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="BlurRadius" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">57</Value>
+    </Setting>
+    <Setting Name="ImageAdjustment" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">58</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

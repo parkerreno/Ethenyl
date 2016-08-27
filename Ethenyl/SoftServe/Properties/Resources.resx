@@ -121,6 +121,9 @@
     <value>Soft Serve</value>
     <comment>[appwide]</comment>
   </data>
+  <data name="BackgroundSection" xml:space="preserve">
+    <value>Background Image Settings</value>
+  </data>
   <data name="HostName" xml:space="preserve">
     <value>Host Name:</value>
     <comment>[settingspage] Computer hostname to aid connecting via WaferCone</comment>
@@ -128,6 +131,18 @@
   <data name="HostNameHelp" xml:space="preserve">
     <value>Use this to connect to SoftServe via WaferCone.</value>
     <comment>[settingspage]</comment>
+  </data>
+  <data name="ImageAdjust" xml:space="preserve">
+    <value>Brightness(?) adjustment</value>
+  </data>
+  <data name="ImageAdjustHelp" xml:space="preserve">
+    <value>0 will darken the image, while 255 will lighten it.  This setting is somewhat experimental right now. DEFAULT: 58.</value>
+  </data>
+  <data name="ImageBlur" xml:space="preserve">
+    <value>Blur radius (amount)</value>
+  </data>
+  <data name="ImageBlurHelp" xml:space="preserve">
+    <value>Higher values will result in a blurrier background image. DEFAULT: 57.</value>
   </data>
   <data name="IPAddress" xml:space="preserve">
     <value>IP Addresses: </value>
@@ -137,6 +152,9 @@
     <value>Try these IP addresses if connecting via hostname isn't working.  Also be sure you allow SoftServe through your firewall.</value>
     <comment>[settingspage]</comment>
   </data>
+  <data name="NetworkingSection" xml:space="preserve">
+    <value>Networking Information</value>
+  </data>
   <data name="PiRGBAddress" xml:space="preserve">
     <value>Pi RGB IP Address: </value>
     <comment>[settingspage] PiRGB address prompt for settings</comment>
@@ -144,6 +162,9 @@
   <data name="PiRGBAddressHelp" xml:space="preserve">
     <value>The hostname or IP address of your PiRGB device.</value>
     <comment>[settingspage]</comment>
+  </data>
+  <data name="PiRGBSection" xml:space="preserve">
+    <value>PiRGB Settings</value>
   </data>
   <data name="SettingsHeader" xml:space="preserve">
     <value>Soft Serve Settings</value>

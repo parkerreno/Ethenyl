@@ -6,16 +6,42 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Media;
 using System.Windows.Media.Effects;
 
 namespace SoftServe.ViewModels
 {
     public class PlayerViewModel : INotifyPropertyChanged
     {
+        private SolidColorBrush _imageAdjustment;
+
+        /// <summary>
+        /// Background brush for behind the album art
+        /// </summary>
+        public SolidColorBrush ImageAdjustment
+        {
+            get { return _imageAdjustment; }
+            set
+            {
+                _imageAdjustment = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BlurEffect _blurEffect;
+
         /// <summary>
         /// Blur effect used for background album art on the player
         /// </summary>
-        public BlurEffect BlurEffect { get; private set; } = new BlurEffect() { Radius = 57, RenderingBias = RenderingBias.Quality };
+        public BlurEffect BlurEffect
+        {
+            get { return _blurEffect; }
+            set
+            {
+                _blurEffect = value;
+                OnPropertyChanged();
+            }
+        }
 
         private string _playButton;
 

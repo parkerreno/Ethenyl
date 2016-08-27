@@ -70,6 +70,15 @@ namespace SoftServe.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background Image Settings.
+        /// </summary>
+        public static string BackgroundSection {
+            get {
+                return ResourceManager.GetString("BackgroundSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Host Name:.
         /// </summary>
         public static string HostName {
@@ -84,6 +93,42 @@ namespace SoftServe.Properties {
         public static string HostNameHelp {
             get {
                 return ResourceManager.GetString("HostNameHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Brightness(?) adjustment.
+        /// </summary>
+        public static string ImageAdjust {
+            get {
+                return ResourceManager.GetString("ImageAdjust", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 0 will darken the image, while 255 will lighten it.  This setting is somewhat experimental right now. DEFAULT: 58..
+        /// </summary>
+        public static string ImageAdjustHelp {
+            get {
+                return ResourceManager.GetString("ImageAdjustHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Blur radius (amount).
+        /// </summary>
+        public static string ImageBlur {
+            get {
+                return ResourceManager.GetString("ImageBlur", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Higher values will result in a blurrier background image. DEFAULT: 57..
+        /// </summary>
+        public static string ImageBlurHelp {
+            get {
+                return ResourceManager.GetString("ImageBlurHelp", resourceCulture);
             }
         }
         
@@ -106,6 +151,15 @@ namespace SoftServe.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Networking Information.
+        /// </summary>
+        public static string NetworkingSection {
+            get {
+                return ResourceManager.GetString("NetworkingSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pi RGB IP Address: .
         /// </summary>
         public static string PiRGBAddress {
@@ -120,6 +174,15 @@ namespace SoftServe.Properties {
         public static string PiRGBAddressHelp {
             get {
                 return ResourceManager.GetString("PiRGBAddressHelp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PiRGB Settings.
+        /// </summary>
+        public static string PiRGBSection {
+            get {
+                return ResourceManager.GetString("PiRGBSection", resourceCulture);
             }
         }
         
