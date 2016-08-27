@@ -31,7 +31,7 @@
                     <Button Content="{Binding Player.PlayButton, FallbackValue=''}" Style="{StaticResource MediaButtons}" Click="PlayPauseClick" />
                     <Button Content="" Style="{StaticResource MediaButtons}" Click="Forward_Click"/>
                 </StackPanel>
-                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding Player.ProgressInd}" Value="{Binding TrackStatus}" Maximum="{Binding TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
+                <ProgressBar Grid.Row="0" Panel.ZIndex="-1" IsIndeterminate="{Binding Player.ProgressInd}" Value="{Binding Player.TrackStatus}" Maximum="{Binding Player.TrackMax}" BorderBrush="{x:Null}" Background="{x:Null}" Foreground="#FFFFFFFF" Opacity="0.44" />
             </Grid>
             <ListView x:Name="QueueList" Grid.Row="2" ItemsSource="{Binding Player.SongQueue}" Background="{x:Null}" BorderThickness="0">
                 <ListView.ItemTemplate>
