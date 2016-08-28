@@ -61,6 +61,9 @@ namespace SoftServe.Views
             sl.ConnectionReceived += Sl_ConnectionReceived;
         }
 
+        /// <summary>
+        /// Initializes the local spotify api and starts listening to various events
+        /// </summary>
         public void InitializeSpotifyApi()
         {
             if (!SpotifyLocalAPI.IsSpotifyRunning())
@@ -138,12 +141,16 @@ namespace SoftServe.Views
                     //TODO:Special authentication for play controls
                     _localApi.Pause();
                     MessageBox.Show($"{authUser} paused the music.", "Music Paused");
-                    commands.Dequeue(); //dequeue null arguments.
+                    commands.Dequeue(); // dequeue null arguments.
                     break;
                 case "SKIPSONG":
                     //TODO: Special auth
                     _localApi.Skip();
-                    commands.Dequeue();//dequeue null arguments.
+                    commands.Dequeue();// dequeue null arguments.
+                    break;
+                case "FORCEDEQUEUE": // Can be used to get out of bad state
+                    // TODO: Check permissions
+                    PlayNextSong();
                     break;
                 default:
                     MessageBox.Show("Unknown Command from Client");
