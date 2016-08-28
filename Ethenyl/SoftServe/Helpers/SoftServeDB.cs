@@ -21,12 +21,28 @@ namespace SoftServe.Helpers
         /// </summary>
         /// <param name="username">User's username</param>
         /// <param name="passcode">User's passcode</param>
+        /// /// <param name="userId">id of authenticated user</param>
         /// <returns>True if authentication succeeded</returns>
-        public bool AuthenticateUser(string username, string passcode)
+        public bool TryAuthenticateUser(string username, string passcode, out int userId)
         {
-            return Table<User>().Any(user=>user.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase) && user.Passcode.Equals(passcode));
+            if (Table<User>().Any(user =>
+                            user.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase) &&
+                            user.Passcode.Equals(passcode)))
+            {
+                userId = Table<User>().First(user => user.UserName.Equals(username)).UserId;
+                return true;
+            }
+            userId = -1;
+            return false;
         }
 
+        /// <summary>
+        /// Tries to create a user
+        /// </summary>
+        /// <param name="username">username to create</param>
+        /// <param name="passcode">passcode for user</param>
+        /// <param name="id">id of created user</param>
+        /// <returns>Whether the operate succeeded</returns>
         public bool TryCreateUser(string username, string passcode, out int id)
         {
             if (Table<User>().Any(user => user.UserName.Equals(username, StringComparison.InvariantCultureIgnoreCase)))
@@ -39,6 +55,16 @@ namespace SoftServe.Helpers
                 id = Insert(new User() {UserName = username, Passcode = passcode});
                 return true;
             }
+        }
+
+        /// <summary>
+        /// Creates a record for the queued song
+        /// </summary>
+        /// <param name="userId">id of user that queued song</param>
+        /// <param name="spotifyId">Spotify id of song</param>
+        public void QueueSong(int userId, string spotifyId)
+        {
+            Insert(new Song() {DateAddedUtc = DateTime.UtcNow, UserId = userId, SpotifyId = spotifyId});
         }
 
         /// <summary>

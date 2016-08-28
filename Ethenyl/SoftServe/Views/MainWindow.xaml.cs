@@ -23,10 +23,10 @@ namespace SoftServe.Views
     {
         #region Properties & Members
 
-        private EthenylViewModel _dataContext;
         private PlayerViewModel _playerModel;
 
         private SpotifyLocalAPI _localApi;
+        private SoftServeDB _db;
 
         /// <summary>
         /// Used to limit user to one settings window to avoid confusion
@@ -42,11 +42,27 @@ namespace SoftServe.Views
         {
             InitializeComponent();
             DataContext = App.ViewModel;
-            _dataContext = DataContext as EthenylViewModel;
-            _playerModel = _dataContext.Player;
+            _playerModel = (DataContext as EthenylViewModel).Player;
+
+            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SoftServe/SoftServe.db");
+            _db = new SoftServeDB(path);
 
             QueueList.ItemsSource = _playerModel.SongQueue;
 
+            InitializeSpotifyApi();
+            SyncStartingData();
+
+            SizeChanged += MainWindow_SizeChanged;
+            _playerModel.MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
+            
+            _settingsWindow = new SettingsWindow();
+
+            SocketListener sl = new SocketListener("5452");
+            sl.ConnectionReceived += Sl_ConnectionReceived;
+        }
+
+        public void InitializeSpotifyApi()
+        {
             if (!SpotifyLocalAPI.IsSpotifyRunning())
                 SpotifyLocalAPI.RunSpotify();
             if (!SpotifyLocalAPI.IsSpotifyWebHelperRunning())
@@ -54,20 +70,10 @@ namespace SoftServe.Views
             _localApi = new SpotifyLocalAPI();
             _localApi.Connect();
             _localApi.ListenForEvents = true;
-            
+
             _localApi.OnTrackTimeChange += LocalAPI_OnTrackTimeChange;
             _localApi.OnTrackChange += LocalAPI_OnTrackChange;
             _localApi.OnPlayStateChange += LocalAPI_OnPlayStateChange;
-            SizeChanged += MainWindow_SizeChanged;
-
-            _dataContext.Player.MaxEdge = ActualWidth > ActualHeight ? ActualWidth : ActualHeight;
-
-            SyncStartingData();
-
-            _settingsWindow = new SettingsWindow();
-
-            SocketListener sl = new SocketListener("5452");
-            sl.ConnectionReceived += Sl_ConnectionReceived;
         }
         
         /// <summary>
@@ -87,6 +93,7 @@ namespace SoftServe.Views
             }
 
             string currentUser;
+            int currentUserId;
             if (e.Peek().ToUpper() != "ACTIONBY" && e.Peek().ToUpper() != "REGISTERUSER")
             {
                 MessageBox.Show("A command was sent without authentication and was ignored.");
@@ -101,12 +108,15 @@ namespace SoftServe.Views
                     return; // Malformed args (not just username:PIN)
                 }
                 currentUser = userData[0];
-                //TODO: check pin if existing user, register if new user
+                if (!_db.TryAuthenticateUser(userData[0], userData[1], out currentUserId) && !_db.TryCreateUser(userData[0], userData[1], out currentUserId))
+                {
+                    return; // bad credentials
+                }
             }
 
             if (e.Count > 0 && e.Count % 2 == 0)
             {
-                HandleCommands(e, currentUser);
+                HandleCommands(e, currentUser, currentUserId);
             }
         }
 
@@ -115,13 +125,14 @@ namespace SoftServe.Views
         /// </summary>
         /// <param name="commands"></param>
         /// <param name="authUser">Username of *authorized* user</param>
-        private void HandleCommands(Queue<string> commands, string authUser)
+        private void HandleCommands(Queue<string> commands, string authUser, int userId)
         {
             switch (commands.Dequeue().ToUpper())
             {
                 case "QUEUEID":
                     string id = commands.Dequeue();
                     AddIdToQueue(id, authUser);
+                    _db.QueueSong(userId, id);
                     break;
                 case "PAUSESONG":
                     //TODO:Special authentication for play controls
@@ -141,7 +152,7 @@ namespace SoftServe.Views
 
             if (commands.Count > 0 && commands.Count % 2 ==0)
             {
-                HandleCommands(commands, authUser);
+                HandleCommands(commands, authUser, userId);
             }
         }
 
@@ -215,13 +226,7 @@ namespace SoftServe.Views
 
             if (!e.NewTrack.IsAd() && !status.Playing  && _playerModel.SongQueue.Count > 0) // requirements for queueing a new song
             {
-                var toPlay = _playerModel.SongQueue[0];
-                _localApi.PlayURL(toPlay.SpotifyUri);
-
-                Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
-                {
-                    _playerModel.SongQueue.Remove(toPlay);
-                });
+                PlayNextSong();
             }
             else if (!e.NewTrack.IsAd()) // update now playing info
             {
@@ -260,6 +265,20 @@ namespace SoftServe.Views
                 _playerModel.CurrentSong = "Advertisement";
                 _playerModel.CurrentArtist = "If only the current user paid for premium...  Oh well.";
             }
+        }
+
+        /// <summary>
+        /// Plays next song in the queue
+        /// </summary>
+        private void PlayNextSong()
+        {
+            var toPlay = _playerModel.SongQueue[0];
+            _localApi.PlayURL(toPlay.SpotifyUri);
+
+            Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
+            {
+                _playerModel.SongQueue.Remove(toPlay);
+            });
         }
 
         /// <summary>
