@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Media;
-using SpotifyAPI.Web.Models;
 using Color = System.Drawing.Color;
 
-namespace SoftServe
+namespace SoftServe.Helpers 
 {
     /// <summary>
     /// Bitmap processor class (for album art)

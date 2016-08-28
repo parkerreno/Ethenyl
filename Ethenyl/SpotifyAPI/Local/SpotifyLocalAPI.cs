@@ -97,7 +97,7 @@ namespace SpotifyAPI.Local
                 bool ethenyl = (newStatusResponse.Track.TrackResource?.Name ==
                                 _eventStatusResponse.Track.TrackResource?.Name && !newStatusResponse.Playing &&
                                 newStatusResponse.PlayingPosition + .5 < _eventStatusResponse.PlayingPosition); // This allows ethenyl to queue a song after a single song is play and stops.
-                if (newStatusResponse.Track.TrackResource?.Name != _eventStatusResponse.Track.TrackResource?.Name || newStatusResponse.Track.AlbumResource?.Name != _eventStatusResponse.Track.AlbumResource?.Name || ethenyl)
+                if (newStatusResponse.Track.TrackResource?.Uri != _eventStatusResponse.Track.TrackResource?.Uri || ethenyl)
                 {
                     OnTrackChange?.Invoke(this, new TrackChangeEventArgs()
                     {

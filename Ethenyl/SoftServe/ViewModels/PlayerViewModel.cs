@@ -206,18 +206,18 @@ namespace SoftServe.ViewModels
             }
         }
 
-        private ObservableCollection<QueuedSong> _songQueue;
+        private ObservableCollection<QueuedSongViewModel> _songQueue;
 
         /// <summary>
         /// Current list of queued songs
         /// </summary>
-        public ObservableCollection<QueuedSong> SongQueue
+        public ObservableCollection<QueuedSongViewModel> SongQueue
         {
             get
             {
                 if (_songQueue == null)
                 {
-                    _songQueue = new ObservableCollection<QueuedSong>();
+                    _songQueue = new ObservableCollection<QueuedSongViewModel>();
                 }
                 return _songQueue;
             }
