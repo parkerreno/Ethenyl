@@ -143,6 +143,11 @@ namespace SoftServe.Views
                     MessageBox.Show($"{authUser} paused the music.", "Music Paused");
                     commands.Dequeue(); // dequeue null arguments.
                     break;
+                case "PLAYPAUSE":
+                    //TODO: check permissions
+                    PlayPauseClick(null,null);
+                    commands.Dequeue();
+                    break;
                 case "SKIPSONG":
                     //TODO: Special auth
                     _localApi.Skip();
@@ -151,6 +156,7 @@ namespace SoftServe.Views
                 case "FORCEDEQUEUE": // Can be used to get out of bad state
                     // TODO: Check permissions
                     PlayNextSong();
+                    commands.Dequeue();
                     break;
                 default:
                     MessageBox.Show("Unknown Command from Client");
