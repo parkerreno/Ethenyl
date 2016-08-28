@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace SoftServe
+namespace SoftServe.ViewModels
 {
-    public class QueuedSong : INotifyPropertyChanged
+    public class QueuedSongViewModel : INotifyPropertyChanged
     {
-        public QueuedSong(string trackName, string trackArtist, string spotifyUri, string queuedBy)
+        public QueuedSongViewModel(string trackName, string trackArtist, string spotifyUri, string queuedBy)
         {
             TrackName = trackName;
             TrackArtist = trackArtist;

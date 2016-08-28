@@ -1,23 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media.Effects;
 using System.Windows.Threading;
+using SoftServe.Helpers;
 using SoftServe.PCL;
+using SoftServe.ViewModels;
 using SpotifyAPI.Local;
 using SpotifyAPI.Local.Enums;
 using SpotifyAPI.Web;
-using Newtonsoft.Json;
-using SoftServe.ViewModels;
 
-namespace SoftServe
+namespace SoftServe.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -313,7 +310,7 @@ namespace SoftServe
                 return;
             }
 
-            var newSong = new QueuedSong(track.Name, track.Artists.First().Name, track.Uri, username);
+            var newSong = new QueuedSongViewModel(track.Name, track.Artists.First().Name, track.Uri, username);
 
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action)delegate ()
             {
