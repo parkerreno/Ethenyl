@@ -44,7 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -58,6 +58,7 @@
     </Compile>
     <Compile Include="Local\Models\SpotifyUri.cs" />
     <Compile Include="Local\VolumeMixerControl.cs" />
+    <Compile Include="Web\Auth\WebAPIFactory.cs" />
     <Compile Include="Web\Enums\TimeRangeType.cs" />
     <Compile Include="Web\IClient.cs" />
     <Compile Include="Local\Models\CFID.cs" />
@@ -92,6 +93,7 @@
     <Compile Include="Web\Models\Recommendations.cs" />
     <Compile Include="Web\Models\RecommendationSeed .cs" />
     <Compile Include="Web\Models\RecommendationSeedGenres.cs" />
+    <Compile Include="Web\Models\ResponseInfo.cs" />
     <Compile Include="Web\Models\SearchItem.cs" />
     <Compile Include="Web\Models\PrivateProfile.cs" />
     <Compile Include="Web\Models\GeneralModels.cs" />
@@ -119,9 +121,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="LICENSE" />
     <None Include="packages.config" />
-    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
