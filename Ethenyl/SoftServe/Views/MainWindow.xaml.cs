@@ -249,7 +249,7 @@ namespace SoftServe.Views
                 _playerModel.TrackMax = e.NewTrack.Length;
                 _playerModel.CurrentAlbumArt = new Uri(e.NewTrack.GetAlbumArtUrl(AlbumArtSize.Size640));
                 bool useRgb = App.ViewModel.UsePiRGB;
-                string host = App.ViewModel.HostName;
+                string host = App.ViewModel.PiRGBAddress;
 
                 if (useRgb) //RGB Lighting communication
                 {
