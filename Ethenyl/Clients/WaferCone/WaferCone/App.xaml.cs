@@ -13,7 +13,7 @@ namespace WaferCone
         {
             InitializeComponent();
 
-            MainPage = new WaferCone.MainPage();
+            MainPage = new WaferCone.Views.IntroPage();
         }
 
         protected override void OnStart()

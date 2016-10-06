@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CarouselPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WaferCone.Views.IntroPage">
+  <ContentPage>
+    <StackLayout>
+      <Label Style="{DynamicResource TitleStyle}" HorizontalTextAlignment="Center">Setup the Server</Label>
+      <Image Source="testimage.png"></Image>
+      <Label Style="{DynamicResource CaptionStyle}">
+        <Label.Text>
+          Getting started is easy!  Just go to http://ethenyl.parkerreno.net to download the latest release of Soft
+          Serve to run on your PC.  Be sure to allow it through your firewall so Wafer Cone can connect.
+          You'll also want to install Spotify while you're at it (otherwise we won't be able to do much).
+        </Label.Text>
+      </Label>
+    </StackLayout>
+  </ContentPage>
+
+  <ContentPage>
+    <StackLayout>
+      <Label Style="{DynamicResource SubtitleStyle}" HorizontalTextAlignment="Center">Get Connected</Label>
+      <Label Style="{DynamicResource CaptionStyle}">
+        <Label.Text>
+          If you already know your PC's hostname or IP address, enter that when you login, otherwise check the
+          settings menu on Soft Serve.
+        </Label.Text>
+
+      </Label>
+    </StackLayout>
+  </ContentPage>
+
+  <ContentPage>
+    <StackLayout>
+      <Label Style="{DynamicResource SubtitleStyle}" HorizontalTextAlignment="Center">Start Queueing Up Music!</Label>
+      <Label Style="{DynamicResource CaptionStyle}">
+        <Label.Text>
+          After you log in, you'll be free to start queueing up tracks!
+        </Label.Text>
+      </Label>
+    </StackLayout>
+  </ContentPage>
+
+</CarouselPage>
